@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import app.k12onos.tickets.domain.User;
+import app.k12onos.tickets.domain.entities.User;
 import app.k12onos.tickets.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -38,7 +38,7 @@ public class UserProvisioningFilter extends OncePerRequestFilter {
             if (!userRepository.existsById(keycloakId)) {
                 User user = new User();
                 user.setId(keycloakId);
-                user.setName(jwt.getClaimAsString("preferred_name"));
+                user.setName(jwt.getClaimAsString("name"));
                 user.setEmail(jwt.getClaimAsString("email"));
 
                 userRepository.save(user);

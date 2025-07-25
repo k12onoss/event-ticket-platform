@@ -5,9 +5,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import app.k12onos.tickets.domain.entities.User;
+import app.k12onos.tickets.domain.entities.Event;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface EventRepository extends JpaRepository<Event, UUID> {
 
 }

@@ -1,49 +1,43 @@
-package app.k12onos.tickets.domain;
+package app.k12onos.tickets.domain.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import jakarta.persistence.CascadeType;
+import app.k12onos.tickets.domain.enums.QRCodeStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ticket_types")
-public class TicketType {
+@Table(name = "qr_codes")
+public class QRCode {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private QRCodeStatus status;
 
-    @Column(name = "price", nullable = false)
-    private Double price;
-
-    @Column(name = "total_available")
-    private Integer totalAvailable;
+    @Column(name = "value", nullable = false)
+    private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
-
-    @OneToMany(mappedBy = "ticketType", cascade = CascadeType.ALL)
-    private List<Ticket> tickets = new ArrayList<>();
+    @JoinColumn(name = "ticket_id")
+    private Ticket ticket;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -53,19 +47,15 @@ public class TicketType {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public TicketType(UUID id, String name, Double price, Integer totalAvailable, Event event, List<Ticket> tickets,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public QRCode(UUID id, QRCodeStatus status, Ticket ticket, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.name = name;
-        this.price = price;
-        this.totalAvailable = totalAvailable;
-        this.event = event;
-        this.tickets = tickets;
+        this.status = status;
+        this.ticket = ticket;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public TicketType() {
+    public QRCode() {
     }
 
     public UUID getId() {
@@ -76,44 +66,28 @@ public class TicketType {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public QRCodeStatus getStatus() {
+        return status;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStatus(QRCodeStatus status) {
+        this.status = status;
     }
 
-    public Double getPrice() {
-        return price;
+    public String getValue() {
+        return value;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public Integer getTotalAvailable() {
-        return totalAvailable;
+    public Ticket getTicket() {
+        return ticket;
     }
 
-    public void setTotalAvailable(Integer totalAvailable) {
-        this.totalAvailable = totalAvailable;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -137,9 +111,7 @@ public class TicketType {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((price == null) ? 0 : price.hashCode());
-        result = prime * result + ((totalAvailable == null) ? 0 : totalAvailable.hashCode());
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
         result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
         result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
         return result;
@@ -153,26 +125,13 @@ public class TicketType {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        TicketType other = (TicketType) obj;
+        QRCode other = (QRCode) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
         } else if (!id.equals(other.id))
             return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (price == null) {
-            if (other.price != null)
-                return false;
-        } else if (!price.equals(other.price))
-            return false;
-        if (totalAvailable == null) {
-            if (other.totalAvailable != null)
-                return false;
-        } else if (!totalAvailable.equals(other.totalAvailable))
+        if (status != other.status)
             return false;
         if (createdAt == null) {
             if (other.createdAt != null)

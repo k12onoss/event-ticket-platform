@@ -1,4 +1,4 @@
-package app.k12onos.tickets.domain;
+package app.k12onos.tickets.domain.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,33 +11,42 @@ import org.springframework.data.annotation.LastModifiedDate;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "ticket_types")
+public class TicketType {
 
     @Id
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = false)
-    private String email;
+    @Column(name = "description")
+    private String description;
 
-    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
-    private List<Event> organizedEvents = new ArrayList<>();
+    @Column(name = "price", nullable = false)
+    private Double price;
 
-    @ManyToMany(mappedBy = "attendees")
-    private List<Event> attendedEvents = new ArrayList<>();
+    @Column(name = "total_available")
+    private Integer totalAvailable;
 
-    @ManyToMany(mappedBy = "staff")
-    private List<Event> staffedEvents = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
+
+    @OneToMany(mappedBy = "ticketType", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -47,19 +56,21 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public User(UUID id, String name, String email, List<Event> organizedEvents, List<Event> attendedEvents,
-            List<Event> staffedEvents, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public TicketType(UUID id, String name, String description, Double price, Integer totalAvailable, Event event,
+            List<Ticket> tickets,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
-        this.email = email;
-        this.organizedEvents = organizedEvents;
-        this.attendedEvents = attendedEvents;
-        this.staffedEvents = staffedEvents;
+        this.description = description;
+        this.price = price;
+        this.totalAvailable = totalAvailable;
+        this.event = event;
+        this.tickets = tickets;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public User() {
+    public TicketType() {
     }
 
     public UUID getId() {
@@ -78,36 +89,44 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public List<Event> getOrganizedEvents() {
-        return organizedEvents;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setOrganizedEvents(List<Event> organizedEvents) {
-        this.organizedEvents = organizedEvents;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
-    public List<Event> getAttendedEvents() {
-        return attendedEvents;
+    public Integer getTotalAvailable() {
+        return totalAvailable;
     }
 
-    public void setAttendedEvents(List<Event> attendedEvents) {
-        this.attendedEvents = attendedEvents;
+    public void setTotalAvailable(Integer totalAvailable) {
+        this.totalAvailable = totalAvailable;
     }
 
-    public List<Event> getStaffedEvents() {
-        return staffedEvents;
+    public Event getEvent() {
+        return event;
     }
 
-    public void setStaffedEvents(List<Event> staffedEvents) {
-        this.staffedEvents = staffedEvents;
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -132,7 +151,9 @@ public class User {
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((description == null) ? 0 : description.hashCode());
+        result = prime * result + ((price == null) ? 0 : price.hashCode());
+        result = prime * result + ((totalAvailable == null) ? 0 : totalAvailable.hashCode());
         result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
         result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
         return result;
@@ -146,7 +167,7 @@ public class User {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        User other = (User) obj;
+        TicketType other = (TicketType) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -157,10 +178,20 @@ public class User {
                 return false;
         } else if (!name.equals(other.name))
             return false;
-        if (email == null) {
-            if (other.email != null)
+        if (description == null) {
+            if (other.description != null)
                 return false;
-        } else if (!email.equals(other.email))
+        } else if (!description.equals(other.description))
+            return false;
+        if (price == null) {
+            if (other.price != null)
+                return false;
+        } else if (!price.equals(other.price))
+            return false;
+        if (totalAvailable == null) {
+            if (other.totalAvailable != null)
+                return false;
+        } else if (!totalAvailable.equals(other.totalAvailable))
             return false;
         if (createdAt == null) {
             if (other.createdAt != null)

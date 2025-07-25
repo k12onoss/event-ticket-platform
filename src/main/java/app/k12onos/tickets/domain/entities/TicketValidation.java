@@ -1,14 +1,13 @@
-package app.k12onos.tickets.domain;
+package app.k12onos.tickets.domain.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import jakarta.persistence.CascadeType;
+import app.k12onos.tickets.domain.enums.TicketValidationMethod;
+import app.k12onos.tickets.domain.enums.TicketValidationStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,12 +18,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tickets")
-public class Ticket {
+@Table(name = "ticket_validations")
+public class TicketValidation {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)
@@ -33,21 +31,15 @@ public class Ticket {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TicketStatus status;
+    private TicketValidationStatus status;
+
+    @Column(name = "validation_method", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TicketValidationMethod validationMethod;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_type_id")
-    private TicketType ticketType;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchaser_id")
-    private User purchaser;
-
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-    private List<TicketValidation> validations = new ArrayList<>();
-
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-    private List<QRCode> qrCodes = new ArrayList<>();
+    @JoinColumn(name = "ticket_id")
+    private Ticket ticket;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -57,20 +49,17 @@ public class Ticket {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public Ticket(UUID id, TicketStatus status, TicketType ticketType, User purchaser,
-            List<TicketValidation> validations, List<QRCode> qrCodes, LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+    public TicketValidation(UUID id, TicketValidationStatus status, TicketValidationMethod validationMethod,
+            Ticket ticket, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.status = status;
-        this.ticketType = ticketType;
-        this.purchaser = purchaser;
-        this.validations = validations;
-        this.qrCodes = qrCodes;
+        this.validationMethod = validationMethod;
+        this.ticket = ticket;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Ticket() {
+    public TicketValidation() {
     }
 
     public UUID getId() {
@@ -81,44 +70,28 @@ public class Ticket {
         this.id = id;
     }
 
-    public TicketStatus getStatus() {
+    public TicketValidationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(TicketStatus status) {
+    public void setStatus(TicketValidationStatus status) {
         this.status = status;
     }
 
-    public TicketType getTicketType() {
-        return ticketType;
+    public TicketValidationMethod getValidationMethod() {
+        return validationMethod;
     }
 
-    public void setTicketType(TicketType ticketType) {
-        this.ticketType = ticketType;
+    public void setValidationMethod(TicketValidationMethod validationMethod) {
+        this.validationMethod = validationMethod;
     }
 
-    public User getPurchaser() {
-        return purchaser;
+    public Ticket getTicket() {
+        return ticket;
     }
 
-    public void setPurchaser(User purchaser) {
-        this.purchaser = purchaser;
-    }
-
-    public List<TicketValidation> getValidations() {
-        return validations;
-    }
-
-    public void setValidations(List<TicketValidation> validations) {
-        this.validations = validations;
-    }
-
-    public List<QRCode> getQrCodes() {
-        return qrCodes;
-    }
-
-    public void setQrCodes(List<QRCode> qrCodes) {
-        this.qrCodes = qrCodes;
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -156,7 +129,7 @@ public class Ticket {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Ticket other = (Ticket) obj;
+        TicketValidation other = (TicketValidation) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

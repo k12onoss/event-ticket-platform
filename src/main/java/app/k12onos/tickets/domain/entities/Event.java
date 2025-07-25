@@ -1,12 +1,14 @@
-package app.k12onos.tickets.domain;
+package app.k12onos.tickets.domain.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import app.k12onos.tickets.domain.enums.EventStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +32,7 @@ public class Event {
     @Id
     @Column(name = "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -77,7 +79,7 @@ public class Event {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public Event(String id, String name, LocalDateTime start, LocalDateTime end, String venue,
+    public Event(UUID id, String name, LocalDateTime start, LocalDateTime end, String venue,
             LocalDateTime salesStart, LocalDateTime salesEnd, EventStatus status, User organizer,
             List<User> attendees, List<User> staff, List<TicketType> ticketTypes, LocalDateTime createdAt,
             LocalDateTime updatedAt) {
@@ -100,11 +102,11 @@ public class Event {
     public Event() {
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

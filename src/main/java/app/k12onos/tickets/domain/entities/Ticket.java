@@ -1,11 +1,15 @@
-package app.k12onos.tickets.domain;
+package app.k12onos.tickets.domain.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import app.k12onos.tickets.domain.enums.TicketStatus;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,11 +20,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "qr_codes")
-public class QRCode {
+@Table(name = "tickets")
+public class Ticket {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)
@@ -29,14 +34,21 @@ public class QRCode {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private QRCodeStatus status;
-
-    @Column(name = "value", nullable = false)
-    private String value;
+    private TicketStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_id")
-    private Ticket ticket;
+    @JoinColumn(name = "ticket_type_id")
+    private TicketType ticketType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchaser_id")
+    private User purchaser;
+
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    private List<TicketValidation> validations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    private List<QRCode> qrCodes = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -46,15 +58,20 @@ public class QRCode {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public QRCode(UUID id, QRCodeStatus status, Ticket ticket, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Ticket(UUID id, TicketStatus status, TicketType ticketType, User purchaser,
+            List<TicketValidation> validations, List<QRCode> qrCodes, LocalDateTime createdAt,
+            LocalDateTime updatedAt) {
         this.id = id;
         this.status = status;
-        this.ticket = ticket;
+        this.ticketType = ticketType;
+        this.purchaser = purchaser;
+        this.validations = validations;
+        this.qrCodes = qrCodes;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public QRCode() {
+    public Ticket() {
     }
 
     public UUID getId() {
@@ -65,28 +82,44 @@ public class QRCode {
         this.id = id;
     }
 
-    public QRCodeStatus getStatus() {
+    public TicketStatus getStatus() {
         return status;
     }
 
-    public void setStatus(QRCodeStatus status) {
+    public void setStatus(TicketStatus status) {
         this.status = status;
     }
 
-    public String getValue() {
-        return value;
+    public TicketType getTicketType() {
+        return ticketType;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setTicketType(TicketType ticketType) {
+        this.ticketType = ticketType;
     }
 
-    public Ticket getTicket() {
-        return ticket;
+    public User getPurchaser() {
+        return purchaser;
     }
 
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
+    public void setPurchaser(User purchaser) {
+        this.purchaser = purchaser;
+    }
+
+    public List<TicketValidation> getValidations() {
+        return validations;
+    }
+
+    public void setValidations(List<TicketValidation> validations) {
+        this.validations = validations;
+    }
+
+    public List<QRCode> getQrCodes() {
+        return qrCodes;
+    }
+
+    public void setQrCodes(List<QRCode> qrCodes) {
+        this.qrCodes = qrCodes;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -124,7 +157,7 @@ public class QRCode {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        QRCode other = (QRCode) obj;
+        Ticket other = (Ticket) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
