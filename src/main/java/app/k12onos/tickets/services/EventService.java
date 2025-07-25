@@ -2,11 +2,14 @@ package app.k12onos.tickets.services;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.entities.User;
 import app.k12onos.tickets.domain.requests.CreateEventRequest;
+import app.k12onos.tickets.domain.responses.ListEventResponse;
 import app.k12onos.tickets.exceptions.UserNotFoundException;
 import app.k12onos.tickets.mappers.EventMapper;
 import app.k12onos.tickets.repositories.EventRepository;
@@ -33,6 +36,10 @@ public class EventService {
         Event eventToCreate = eventMapper.toEntity(organizer, event);
 
         return eventRepository.save(eventToCreate);
+    }
+
+    public Page<ListEventResponse> getEventsByOrganizer(UUID organizerId, Pageable pageable) {
+        return eventRepository.findByOrganizerId(organizerId, pageable);
     }
 
 }
