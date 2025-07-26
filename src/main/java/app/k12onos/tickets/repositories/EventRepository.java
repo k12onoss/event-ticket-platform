@@ -1,5 +1,6 @@
 package app.k12onos.tickets.repositories;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +16,9 @@ import app.k12onos.tickets.domain.responses.ListEventResponse;
 public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @Query("SELECT E FROM Event E WHERE E.organizer.id = ?1")
-    Page<ListEventResponse> findByOrganizerId(UUID organizerId, Pageable pageable);
+    Page<ListEventResponse> findEventsByOrganizer(UUID organizerId, Pageable pageable);
+
+    @Query("SELECT E FROM Event E LEFT JOIN FETCH E.ticketTypes WHERE E.organizer.id = ?1 AND E.id = ?2")
+    Optional<Event> findEventByOrganizer(UUID organizerId, UUID eventId);
 
 }

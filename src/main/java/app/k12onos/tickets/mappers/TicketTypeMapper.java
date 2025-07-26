@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.entities.TicketType;
 import app.k12onos.tickets.domain.requests.CreateTicketTypeRequest;
-import app.k12onos.tickets.domain.responses.CreateTicketTypeResponse;
+import app.k12onos.tickets.domain.responses.TicketTypeResponse;
 
 @Component
 public class TicketTypeMapper {
@@ -21,8 +21,8 @@ public class TicketTypeMapper {
         return ticketType;
     }
 
-    CreateTicketTypeResponse toDto(TicketType ticketType) {
-        return new CreateTicketTypeResponse(
+    TicketTypeResponse toDto(TicketType ticketType) {
+        return new TicketTypeResponse(
                 ticketType.getId(),
                 ticketType.getName(),
                 ticketType.getDescription(),

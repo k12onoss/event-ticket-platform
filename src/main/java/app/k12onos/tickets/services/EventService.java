@@ -1,5 +1,6 @@
 package app.k12onos.tickets.services;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -39,7 +40,11 @@ public class EventService {
     }
 
     public Page<ListEventResponse> getEventsByOrganizer(UUID organizerId, Pageable pageable) {
-        return eventRepository.findByOrganizerId(organizerId, pageable);
+        return eventRepository.findEventsByOrganizer(organizerId, pageable);
+    }
+
+    public Optional<Event> getEventByOrganizer(UUID organizerId, UUID eventId) {
+        return eventRepository.findEventByOrganizer(organizerId, eventId);
     }
 
 }

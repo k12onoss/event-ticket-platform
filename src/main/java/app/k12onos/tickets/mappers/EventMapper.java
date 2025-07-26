@@ -8,8 +8,8 @@ import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.entities.TicketType;
 import app.k12onos.tickets.domain.entities.User;
 import app.k12onos.tickets.domain.requests.CreateEventRequest;
-import app.k12onos.tickets.domain.responses.CreateEventResponse;
-import app.k12onos.tickets.domain.responses.CreateTicketTypeResponse;
+import app.k12onos.tickets.domain.responses.EventResponse;
+import app.k12onos.tickets.domain.responses.TicketTypeResponse;
 
 @Component
 public class EventMapper {
@@ -42,13 +42,13 @@ public class EventMapper {
         return event;
     }
 
-    public CreateEventResponse toDto(Event event) {
-        List<CreateTicketTypeResponse> ticketTypeResponses = event
+    public EventResponse toDto(Event event) {
+        List<TicketTypeResponse> ticketTypeResponses = event
                 .getTicketTypes()
                 .stream()
                 .map(ticketTypeMapper::toDto).toList();
 
-        return new CreateEventResponse(
+        return new EventResponse(
                 event.getId(),
                 event.getName(),
                 event.getStart(),
