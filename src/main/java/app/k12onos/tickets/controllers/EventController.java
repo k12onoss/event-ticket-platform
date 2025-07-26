@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.requests.CreateEventRequest;
+import app.k12onos.tickets.domain.requests.UpdateEventRequest;
 import app.k12onos.tickets.domain.responses.EventResponse;
 import app.k12onos.tickets.domain.responses.ListEventResponse;
 import app.k12onos.tickets.mappers.EventMapper;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,6 +79,21 @@ public class EventController {
                 .map(eventMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{eventId}")
+    public ResponseEntity<EventResponse> updateEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId,
+            @Valid @RequestBody UpdateEventRequest updateEventRequest) {
+
+        UUID userId = parseUserId(jwt);
+
+        Event updatedEvent = eventService.updateEventByOrganizer(userId, eventId, updateEventRequest);
+
+        EventResponse updatedEventResponse = eventMapper.toDto(updatedEvent);
+
+        return ResponseEntity.ok(updatedEventResponse);
     }
 
     private UUID parseUserId(Jwt jwt) {

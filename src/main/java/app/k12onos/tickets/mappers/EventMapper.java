@@ -1,6 +1,12 @@
 package app.k12onos.tickets.mappers;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -8,8 +14,11 @@ import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.entities.TicketType;
 import app.k12onos.tickets.domain.entities.User;
 import app.k12onos.tickets.domain.requests.CreateEventRequest;
+import app.k12onos.tickets.domain.requests.UpdateEventRequest;
+import app.k12onos.tickets.domain.requests.UpdateTicketTypeRequest;
 import app.k12onos.tickets.domain.responses.EventResponse;
 import app.k12onos.tickets.domain.responses.TicketTypeResponse;
+import app.k12onos.tickets.exceptions.TicketTypeNotFoundException;
 
 @Component
 public class EventMapper {
@@ -59,6 +68,41 @@ public class EventMapper {
                 ticketTypeResponses,
                 event.getCreatedAt(),
                 event.getUpdatedAt());
+    }
+
+    public void updateEntity(Event event, UpdateEventRequest updateRequest) {
+        event.setName(updateRequest.name());
+        event.setStart(updateRequest.start());
+        event.setEnd(updateRequest.end());
+        event.setVenue(updateRequest.venue());
+        event.setSalesStart(updateRequest.salesStart());
+        event.setSalesEnd(updateRequest.salesEnd());
+        event.setStatus(updateRequest.status());
+
+        Set<UUID> ticketTypeIds = updateRequest.ticketTypes()
+                .stream()
+                .map(UpdateTicketTypeRequest::id)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        event.getTicketTypes().removeIf((ticketType) -> !ticketTypeIds.contains(ticketType.getId()));
+
+        Map<UUID, TicketType> existingTicketTypesMap = event
+                .getTicketTypes()
+                .stream()
+                .collect(Collectors.toMap(TicketType::getId, Function.identity()));
+
+        for (UpdateTicketTypeRequest newTicketType : updateRequest.ticketTypes()) {
+            if (newTicketType.id() == null) {
+                TicketType ticketType = ticketTypeMapper.toEntity(newTicketType, event);
+                event.getTicketTypes().add(ticketType);
+            } else if (existingTicketTypesMap.containsKey(newTicketType.id())) {
+                TicketType existingTicketType = existingTicketTypesMap.get(newTicketType.id());
+                ticketTypeMapper.updateEntity(existingTicketType, newTicketType);
+            } else {
+                throw new TicketTypeNotFoundException("TicketType with id " + newTicketType.id() + " not found");
+            }
+        }
     }
 
 }
