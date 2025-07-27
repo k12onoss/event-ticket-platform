@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.responses.ListEventResponse;
+import app.k12onos.tickets.domain.responses.PublishedEventResponse;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
@@ -20,5 +21,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @Query("SELECT E FROM Event E LEFT JOIN FETCH E.ticketTypes WHERE E.organizer.id = ?1 AND E.id = ?2")
     Optional<Event> findEventByOrganizer(UUID organizerId, UUID eventId);
+
+    @Query("SELECT E FROM Event E WHERE E.status = EventStatus.PUBLISHED")
+    Page<PublishedEventResponse> findPublishedEvents(Pageable pageable);
 
 }
