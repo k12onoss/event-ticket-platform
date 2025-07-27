@@ -25,6 +25,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -94,6 +95,14 @@ public class EventController {
         EventResponse updatedEventResponse = eventMapper.toDto(updatedEvent);
 
         return ResponseEntity.ok(updatedEventResponse);
+    }
+
+    @DeleteMapping("{eventId}")
+    public ResponseEntity<Void> deleteEvent(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID eventId) {
+        UUID userId = parseUserId(jwt);
+        eventService.deleteEventByOrganizer(userId, eventId);
+
+        return ResponseEntity.noContent().build();
     }
 
     private UUID parseUserId(Jwt jwt) {
