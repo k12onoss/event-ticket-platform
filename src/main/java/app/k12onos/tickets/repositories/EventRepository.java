@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.responses.ListEventResponse;
-import app.k12onos.tickets.domain.responses.PublishedEventResponse;
+import app.k12onos.tickets.domain.responses.ListPublishedEventResponse;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
@@ -24,9 +24,12 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     Optional<Event> findEventByOrganizer(UUID organizerId, UUID eventId);
 
     @Query("SELECT E FROM Event E WHERE E.status = EventStatus.PUBLISHED")
-    Page<PublishedEventResponse> findPublishedEvents(Pageable pageable);
+    Page<ListPublishedEventResponse> findPublishedEvents(Pageable pageable);
 
     @Query(nativeQuery = true, value = "SELECT * FROM events WHERE status = 'PUBLISHED' AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)", countQuery = "SELECT COUNT(*) FROM events WHERE status = 'PUBLISHED' AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)")
     Page<Event> searchPublishedEvents(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    @Query("SELECT E FROM Event E JOIN FETCH E.ticketTypes WHERE E.id = ?1 AND E.status = EventStatus.PUBLISHED")
+    Optional<Event> findPublishedEvent(UUID id);
 
 }

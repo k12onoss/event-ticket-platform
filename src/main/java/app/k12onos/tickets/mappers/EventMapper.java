@@ -17,7 +17,9 @@ import app.k12onos.tickets.domain.requests.CreateEventRequest;
 import app.k12onos.tickets.domain.requests.UpdateEventRequest;
 import app.k12onos.tickets.domain.requests.UpdateTicketTypeRequest;
 import app.k12onos.tickets.domain.responses.EventResponse;
+import app.k12onos.tickets.domain.responses.ListPublishedEventResponse;
 import app.k12onos.tickets.domain.responses.PublishedEventResponse;
+import app.k12onos.tickets.domain.responses.PublishedEventTicketTypeResponse;
 import app.k12onos.tickets.domain.responses.TicketTypeResponse;
 import app.k12onos.tickets.exceptions.TicketTypeNotFoundException;
 
@@ -56,7 +58,8 @@ public class EventMapper {
         List<TicketTypeResponse> ticketTypeResponses = event
                 .getTicketTypes()
                 .stream()
-                .map(ticketTypeMapper::toDto).toList();
+                .map(ticketTypeMapper::toTicketTypeResponse)
+                .toList();
 
         return new EventResponse(
                 event.getId(),
@@ -106,13 +109,31 @@ public class EventMapper {
         }
     }
 
-    public PublishedEventResponse toPublishedEventResponse(Event event) {
-        return new PublishedEventResponse(
+    public ListPublishedEventResponse toListPublishedEventResponse(Event event) {
+        return new ListPublishedEventResponse(
                 event.getId(),
                 event.getName(),
                 event.getStart(),
                 event.getEnd(),
                 event.getVenue());
+    }
+
+    public PublishedEventResponse toPublishedEventResponse(Event event) {
+        List<PublishedEventTicketTypeResponse> ticketTypes = event
+                .getTicketTypes()
+                .stream()
+                .map(ticketTypeMapper::toPublishedEventTicketTypeResponse)
+                .toList();
+
+        return new PublishedEventResponse(
+                event.getId(),
+                event.getName(),
+                event.getStart(),
+                event.getEnd(),
+                event.getVenue(),
+                event.getSalesStart(),
+                event.getSalesEnd(),
+                ticketTypes);
     }
 
 }

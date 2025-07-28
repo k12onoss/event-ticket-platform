@@ -1,13 +1,17 @@
 package app.k12onos.tickets.domain.responses;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public record PublishedEventResponse(
-                UUID id,
-                String name,
-                LocalDateTime start,
-                LocalDateTime end,
-                String venue) {
+        UUID id,
+        String name,
+        LocalDateTime start,
+        LocalDateTime end,
+        String venue,
+        LocalDateTime salesStart,
+        LocalDateTime salesEnd,
+        List<PublishedEventTicketTypeResponse> ticketTypes) {
 
 }

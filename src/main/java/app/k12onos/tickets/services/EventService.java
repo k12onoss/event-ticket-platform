@@ -13,7 +13,7 @@ import app.k12onos.tickets.domain.entities.User;
 import app.k12onos.tickets.domain.requests.CreateEventRequest;
 import app.k12onos.tickets.domain.requests.UpdateEventRequest;
 import app.k12onos.tickets.domain.responses.ListEventResponse;
-import app.k12onos.tickets.domain.responses.PublishedEventResponse;
+import app.k12onos.tickets.domain.responses.ListPublishedEventResponse;
 import app.k12onos.tickets.exceptions.EventNotFoundException;
 import app.k12onos.tickets.exceptions.UserNotFoundException;
 import app.k12onos.tickets.mappers.EventMapper;
@@ -76,14 +76,18 @@ public class EventService {
         getEventByOrganizer(organizerId, eventId).ifPresent(eventRepository::delete);
     }
 
-    public Page<PublishedEventResponse> getPublishedEvents(Pageable pageable) {
-        Page<PublishedEventResponse> publishedEvents = eventRepository.findPublishedEvents(pageable);
+    public Page<ListPublishedEventResponse> getPublishedEvents(Pageable pageable) {
+        Page<ListPublishedEventResponse> publishedEvents = eventRepository.findPublishedEvents(pageable);
 
         return publishedEvents;
     }
 
     public Page<Event> searchPublishedEvent(String query, Pageable pageable) {
         return eventRepository.searchPublishedEvents(query, pageable);
+    }
+
+    public Optional<Event> getPublishedEvent(UUID id) {
+        return eventRepository.findPublishedEvent(id);
     }
 
 }
