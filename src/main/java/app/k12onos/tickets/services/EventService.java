@@ -82,4 +82,8 @@ public class EventService {
         return publishedEvents;
     }
 
+    public Page<Event> searchPublishedEvent(String query, Pageable pageable) {
+        return eventRepository.searchPublishedEvents(query, pageable);
+    }
+
 }

@@ -17,6 +17,7 @@ import app.k12onos.tickets.domain.requests.CreateEventRequest;
 import app.k12onos.tickets.domain.requests.UpdateEventRequest;
 import app.k12onos.tickets.domain.requests.UpdateTicketTypeRequest;
 import app.k12onos.tickets.domain.responses.EventResponse;
+import app.k12onos.tickets.domain.responses.PublishedEventResponse;
 import app.k12onos.tickets.domain.responses.TicketTypeResponse;
 import app.k12onos.tickets.exceptions.TicketTypeNotFoundException;
 
@@ -51,7 +52,7 @@ public class EventMapper {
         return event;
     }
 
-    public EventResponse toDto(Event event) {
+    public EventResponse toEventResponse(Event event) {
         List<TicketTypeResponse> ticketTypeResponses = event
                 .getTicketTypes()
                 .stream()
@@ -103,6 +104,15 @@ public class EventMapper {
                 throw new TicketTypeNotFoundException("TicketType with id " + newTicketType.id() + " not found");
             }
         }
+    }
+
+    public PublishedEventResponse toPublishedEventResponse(Event event) {
+        return new PublishedEventResponse(
+                event.getId(),
+                event.getName(),
+                event.getStart(),
+                event.getEnd(),
+                event.getVenue());
     }
 
 }

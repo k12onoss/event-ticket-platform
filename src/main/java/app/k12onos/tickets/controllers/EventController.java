@@ -50,7 +50,7 @@ public class EventController {
 
         Event createdEvent = eventService.createEvent(userId, createEventRequest);
 
-        EventResponse createEventResponse = eventMapper.toDto(createdEvent);
+        EventResponse createEventResponse = eventMapper.toEventResponse(createdEvent);
 
         return new ResponseEntity<>(createEventResponse, HttpStatus.CREATED);
     }
@@ -77,7 +77,7 @@ public class EventController {
         Optional<Event> event = eventService.getEventByOrganizer(userId, eventId);
 
         return event
-                .map(eventMapper::toDto)
+                .map(eventMapper::toEventResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -92,7 +92,7 @@ public class EventController {
 
         Event updatedEvent = eventService.updateEventByOrganizer(userId, eventId, updateEventRequest);
 
-        EventResponse updatedEventResponse = eventMapper.toDto(updatedEvent);
+        EventResponse updatedEventResponse = eventMapper.toEventResponse(updatedEvent);
 
         return ResponseEntity.ok(updatedEventResponse);
     }
