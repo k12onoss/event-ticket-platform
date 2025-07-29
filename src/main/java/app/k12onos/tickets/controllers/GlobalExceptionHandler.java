@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import app.k12onos.tickets.domain.responses.ErrorResponse;
 import app.k12onos.tickets.exceptions.EventNotFoundException;
 import app.k12onos.tickets.exceptions.TicketTypeNotFoundException;
+import app.k12onos.tickets.exceptions.TicketsSoldOutException;
 import app.k12onos.tickets.exceptions.UserNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 
@@ -42,6 +43,15 @@ public class GlobalExceptionHandler {
         logger.error("Caught TicketTypeNotFoundException " + ex.getMessage());
 
         ErrorResponse error = new ErrorResponse("TicketType not found");
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TicketsSoldOutException.class)
+    public ResponseEntity<ErrorResponse> handleException(TicketsSoldOutException ex) {
+        logger.error("Caught TicketsSoldOutException " + ex.getMessage());
+
+        ErrorResponse error = new ErrorResponse("Tickets are sold out");
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
