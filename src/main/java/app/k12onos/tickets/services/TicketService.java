@@ -1,13 +1,17 @@
 package app.k12onos.tickets.services;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import app.k12onos.tickets.domain.entities.Ticket;
 import app.k12onos.tickets.domain.entities.TicketType;
 import app.k12onos.tickets.domain.entities.User;
 import app.k12onos.tickets.domain.enums.TicketStatus;
+import app.k12onos.tickets.domain.responses.ListTicketResponse;
 import app.k12onos.tickets.exceptions.TicketTypeNotFoundException;
 import app.k12onos.tickets.exceptions.TicketsSoldOutException;
 import app.k12onos.tickets.exceptions.UserNotFoundException;
@@ -61,6 +65,14 @@ public class TicketService {
         ticket.getQrCodes().add(qrCodeService.createQRCode(ticket));
 
         return ticketRepository.save(ticket);
+    }
+
+    public Page<ListTicketResponse> getTicketsForPurchaser(UUID purchaserId, Pageable pageable) {
+        return ticketRepository.findTicketsForPurchaser(purchaserId, pageable);
+    }
+
+    public Optional<Ticket> getTicketForPurchaser(UUID purchaserId, UUID ticketId) {
+        return ticketRepository.findTicketForPurchaser(purchaserId, ticketId);
     }
 
 }

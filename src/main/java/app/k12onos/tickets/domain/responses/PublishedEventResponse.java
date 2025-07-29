@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 public record PublishedEventResponse(
-        UUID id,
-        String name,
-        LocalDateTime start,
-        LocalDateTime end,
-        String venue,
-        LocalDateTime salesStart,
-        LocalDateTime salesEnd,
-        List<PublishedEventTicketTypeResponse> ticketTypes) {
+                UUID id,
+                String name,
+                LocalDateTime start,
+                LocalDateTime end,
+                String venue,
+                LocalDateTime salesStart,
+                LocalDateTime salesEnd,
+                List<TicketTypeSummaryResponse> ticketTypes) {
 
 }

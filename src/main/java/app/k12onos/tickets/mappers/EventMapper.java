@@ -19,7 +19,7 @@ import app.k12onos.tickets.domain.requests.UpdateTicketTypeRequest;
 import app.k12onos.tickets.domain.responses.EventResponse;
 import app.k12onos.tickets.domain.responses.ListPublishedEventResponse;
 import app.k12onos.tickets.domain.responses.PublishedEventResponse;
-import app.k12onos.tickets.domain.responses.PublishedEventTicketTypeResponse;
+import app.k12onos.tickets.domain.responses.TicketTypeSummaryResponse;
 import app.k12onos.tickets.domain.responses.TicketTypeResponse;
 import app.k12onos.tickets.exceptions.TicketTypeNotFoundException;
 
@@ -119,7 +119,7 @@ public class EventMapper {
     }
 
     public PublishedEventResponse toPublishedEventResponse(Event event) {
-        List<PublishedEventTicketTypeResponse> ticketTypes = event
+        List<TicketTypeSummaryResponse> ticketTypes = event
                 .getTicketTypes()
                 .stream()
                 .map(ticketTypeMapper::toPublishedEventTicketTypeResponse)

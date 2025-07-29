@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import app.k12onos.tickets.domain.responses.ErrorResponse;
 import app.k12onos.tickets.exceptions.EventNotFoundException;
+import app.k12onos.tickets.exceptions.QRCodeNotFoundException;
 import app.k12onos.tickets.exceptions.TicketTypeNotFoundException;
 import app.k12onos.tickets.exceptions.TicketsSoldOutException;
 import app.k12onos.tickets.exceptions.UserNotFoundException;
@@ -43,6 +44,15 @@ public class GlobalExceptionHandler {
         logger.error("Caught TicketTypeNotFoundException " + ex.getMessage());
 
         ErrorResponse error = new ErrorResponse("TicketType not found");
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(QRCodeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(QRCodeNotFoundException ex) {
+        logger.error("Caught QRCodeNotFoundException " + ex.getMessage());
+
+        ErrorResponse error = new ErrorResponse("QR code not found");
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

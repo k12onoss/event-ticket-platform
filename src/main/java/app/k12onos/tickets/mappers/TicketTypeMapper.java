@@ -6,7 +6,7 @@ import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.entities.TicketType;
 import app.k12onos.tickets.domain.requests.CreateTicketTypeRequest;
 import app.k12onos.tickets.domain.requests.UpdateTicketTypeRequest;
-import app.k12onos.tickets.domain.responses.PublishedEventTicketTypeResponse;
+import app.k12onos.tickets.domain.responses.TicketTypeSummaryResponse;
 import app.k12onos.tickets.domain.responses.TicketTypeResponse;
 
 @Component
@@ -52,8 +52,8 @@ public class TicketTypeMapper {
         ticketType.setTotalAvailable(ticketTypeRequest.totalAvailable());
     }
 
-    PublishedEventTicketTypeResponse toPublishedEventTicketTypeResponse(TicketType ticketType) {
-        return new PublishedEventTicketTypeResponse(
+    TicketTypeSummaryResponse toPublishedEventTicketTypeResponse(TicketType ticketType) {
+        return new TicketTypeSummaryResponse(
                 ticketType.getId(),
                 ticketType.getName(),
                 ticketType.getDescription(),

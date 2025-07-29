@@ -32,7 +32,7 @@ public class QRCode {
     @Enumerated(EnumType.STRING)
     private QRCodeStatus status;
 
-    @Column(name = "value", nullable = false)
+    @Column(name = "value", columnDefinition = "TEXT", nullable = false)
     private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
