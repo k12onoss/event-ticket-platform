@@ -22,7 +22,6 @@ public class JwtAuthenticationConverter implements Converter<Jwt, JwtAuthenticat
     @Nullable
     public JwtAuthenticationToken convert(@NonNull Jwt jwt) {
         Collection<GrantedAuthority> authorities = extractAuthorities(jwt);
-        System.out.println(authorities);
         return new JwtAuthenticationToken(jwt, authorities);
     }
 
@@ -36,7 +35,11 @@ public class JwtAuthenticationConverter implements Converter<Jwt, JwtAuthenticat
         @SuppressWarnings("unchecked")
         List<String> roles = (List<String>) realmAccess.get("roles");
 
-        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return roles
+                .stream()
+                .filter(role -> role.startsWith("ROLE_"))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
 }

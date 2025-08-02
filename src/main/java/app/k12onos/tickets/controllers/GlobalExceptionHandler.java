@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import app.k12onos.tickets.domain.responses.ErrorResponse;
 import app.k12onos.tickets.exceptions.EventNotFoundException;
+import app.k12onos.tickets.exceptions.QRCodeGenerationException;
 import app.k12onos.tickets.exceptions.QRCodeNotFoundException;
 import app.k12onos.tickets.exceptions.TicketTypeNotFoundException;
 import app.k12onos.tickets.exceptions.TicketsSoldOutException;
@@ -64,6 +65,15 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse("Tickets are sold out");
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(QRCodeGenerationException.class)
+    public ResponseEntity<ErrorResponse> handleException(QRCodeGenerationException ex) {
+        logger.error("Caught QRCodeGenerationException " + ex.getMessage());
+
+        ErrorResponse error = new ErrorResponse("Error generating QR code");
+
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

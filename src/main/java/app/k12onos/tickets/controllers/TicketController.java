@@ -38,7 +38,8 @@ public class TicketController {
 
         UUID userId = parseUserId(jwt);
 
-        Page<ListTicketResponse> tickets = ticketService.getTicketsForPurchaser(userId, pageable);
+        Page<ListTicketResponse> tickets = ticketService.getTicketsForPurchaser(userId, pageable)
+                .map(ticket -> ListTicketResponse.from(ticket));
 
         return new PagedModel<>(tickets);
     }

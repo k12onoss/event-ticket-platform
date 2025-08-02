@@ -97,7 +97,7 @@ public class EventController {
         return ResponseEntity.ok(updatedEventResponse);
     }
 
-    @DeleteMapping("{eventId}")
+    @DeleteMapping("/{eventId}")
     public ResponseEntity<Void> deleteEvent(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID eventId) {
         UUID userId = parseUserId(jwt);
         eventService.deleteEventByOrganizer(userId, eventId);
