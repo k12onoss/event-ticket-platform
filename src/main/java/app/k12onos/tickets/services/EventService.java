@@ -16,7 +16,6 @@ import app.k12onos.tickets.domain.responses.ListEventResponse;
 import app.k12onos.tickets.domain.responses.ListPublishedEventResponse;
 import app.k12onos.tickets.exceptions.EventNotFoundException;
 import app.k12onos.tickets.exceptions.UserNotFoundException;
-import app.k12onos.tickets.mappers.EventMapper;
 import app.k12onos.tickets.repositories.EventRepository;
 import app.k12onos.tickets.repositories.UserRepository;
 
@@ -25,16 +24,10 @@ public class EventService {
 
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
-    private final EventMapper eventMapper;
 
-    EventService(
-            UserRepository userRepository,
-            EventRepository eventRepository,
-            EventMapper eventMapper) {
-
+    EventService(UserRepository userRepository, EventRepository eventRepository) {
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
-        this.eventMapper = eventMapper;
     }
 
     @Transactional
@@ -43,7 +36,7 @@ public class EventService {
                 .findById(organizerId)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + organizerId + " not found."));
 
-        Event eventToCreate = eventMapper.toEntity(organizer, event);
+        Event eventToCreate = event.toEntity(organizer);
 
         return eventRepository.save(eventToCreate);
     }
@@ -66,7 +59,7 @@ public class EventService {
                 .findEventByOrganizer(organizerId, eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event with id " + eventId + " not found"));
 
-        eventMapper.updateEntity(existingEvent, updateRequest);
+        updateRequest.updateEntity(existingEvent);
 
         return eventRepository.save(existingEvent);
     }

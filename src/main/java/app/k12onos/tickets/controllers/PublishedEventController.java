@@ -18,19 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 import app.k12onos.tickets.domain.entities.Event;
 import app.k12onos.tickets.domain.responses.ListPublishedEventResponse;
 import app.k12onos.tickets.domain.responses.PublishedEventResponse;
-import app.k12onos.tickets.mappers.EventMapper;
 import app.k12onos.tickets.services.EventService;
 
 @RestController
 @RequestMapping(path = "/api/v1/published-events")
 public class PublishedEventController {
 
-    private final EventMapper eventMapper;
     private final EventService eventService;
 
-    public PublishedEventController(EventService eventService, EventMapper eventMapper) {
+    public PublishedEventController(EventService eventService) {
         this.eventService = eventService;
-        this.eventMapper = eventMapper;
     }
 
     @GetMapping
@@ -43,7 +40,7 @@ public class PublishedEventController {
 
         if (q != null && !q.isBlank()) {
             var events = eventService.searchPublishedEvent(q, pageable);
-            publishedEvents = events.map(eventMapper::toListPublishedEventResponse);
+            publishedEvents = events.map(ListPublishedEventResponse::from);
         } else {
             publishedEvents = eventService.getPublishedEvents(pageable);
         }
@@ -56,7 +53,7 @@ public class PublishedEventController {
         Optional<Event> publishedEvent = eventService.getPublishedEvent(eventId);
 
         return publishedEvent
-                .map(eventMapper::toPublishedEventResponse)
+                .map(PublishedEventResponse::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

@@ -8,7 +8,6 @@ import app.k12onos.tickets.domain.requests.CreateEventRequest;
 import app.k12onos.tickets.domain.requests.UpdateEventRequest;
 import app.k12onos.tickets.domain.responses.EventResponse;
 import app.k12onos.tickets.domain.responses.ListEventResponse;
-import app.k12onos.tickets.mappers.EventMapper;
 import app.k12onos.tickets.services.EventService;
 import jakarta.validation.Valid;
 
@@ -33,11 +32,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping(path = "/api/v1/events")
 public class EventController {
 
-    private final EventMapper eventMapper;
     private final EventService eventService;
 
-    EventController(EventMapper eventMapper, EventService eventService) {
-        this.eventMapper = eventMapper;
+    EventController(EventService eventService) {
         this.eventService = eventService;
     }
 
@@ -50,7 +47,7 @@ public class EventController {
 
         Event createdEvent = eventService.createEvent(userId, createEventRequest);
 
-        EventResponse createEventResponse = eventMapper.toEventResponse(createdEvent);
+        EventResponse createEventResponse = EventResponse.from(createdEvent);
 
         return new ResponseEntity<>(createEventResponse, HttpStatus.CREATED);
     }
@@ -77,7 +74,7 @@ public class EventController {
         Optional<Event> event = eventService.getEventByOrganizer(userId, eventId);
 
         return event
-                .map(eventMapper::toEventResponse)
+                .map(EventResponse::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -92,7 +89,7 @@ public class EventController {
 
         Event updatedEvent = eventService.updateEventByOrganizer(userId, eventId, updateEventRequest);
 
-        EventResponse updatedEventResponse = eventMapper.toEventResponse(updatedEvent);
+        EventResponse updatedEventResponse = EventResponse.from(updatedEvent);
 
         return ResponseEntity.ok(updatedEventResponse);
     }

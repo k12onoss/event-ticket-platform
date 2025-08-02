@@ -3,6 +3,8 @@ package app.k12onos.tickets.domain.responses;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import app.k12onos.tickets.domain.entities.TicketType;
+
 public record TicketTypeResponse(
         UUID id,
         String name,
@@ -11,5 +13,16 @@ public record TicketTypeResponse(
         Integer totalAvailable,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
+
+    public static TicketTypeResponse from(TicketType ticketType) {
+        return new TicketTypeResponse(
+                ticketType.getId(),
+                ticketType.getName(),
+                ticketType.getDescription(),
+                ticketType.getPrice(),
+                ticketType.getTotalAvailable(),
+                ticketType.getCreatedAt(),
+                ticketType.getUpdatedAt());
+    }
 
 }
