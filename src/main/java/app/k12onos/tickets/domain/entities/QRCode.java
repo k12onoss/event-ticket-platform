@@ -32,8 +32,8 @@ public class QRCode {
     @Enumerated(EnumType.STRING)
     private QRCodeStatus status;
 
-    @Column(name = "value", columnDefinition = "TEXT", nullable = false)
-    private String value;
+    @Column(name = "token", nullable = false, unique = true, length = 16)
+    private String token;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id")
@@ -59,7 +59,7 @@ public class QRCode {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID id) {
@@ -67,23 +67,23 @@ public class QRCode {
     }
 
     public QRCodeStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(QRCodeStatus status) {
         this.status = status;
     }
 
-    public String getValue() {
-        return value;
+    public String getToken() {
+        return this.token;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setToken(String value) {
+        this.token = value;
     }
 
     public Ticket getTicket() {
-        return ticket;
+        return this.ticket;
     }
 
     public void setTicket(Ticket ticket) {
@@ -91,7 +91,7 @@ public class QRCode {
     }
 
     public LocalDateTime getCreatedAt() {
-        return createdAt;
+        return this.createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
@@ -99,7 +99,7 @@ public class QRCode {
     }
 
     public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+        return this.updatedAt;
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
@@ -110,10 +110,10 @@ public class QRCode {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-        result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
+        result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
+        result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
         return result;
     }
 
@@ -123,25 +123,25 @@ public class QRCode {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (this.getClass() != obj.getClass())
             return false;
         QRCode other = (QRCode) obj;
-        if (id == null) {
+        if (this.id == null) {
             if (other.id != null)
                 return false;
-        } else if (!id.equals(other.id))
+        } else if (!this.id.equals(other.id))
             return false;
-        if (status != other.status)
+        if (this.status != other.status)
             return false;
-        if (createdAt == null) {
+        if (this.createdAt == null) {
             if (other.createdAt != null)
                 return false;
-        } else if (!createdAt.equals(other.createdAt))
+        } else if (!this.createdAt.equals(other.createdAt))
             return false;
-        if (updatedAt == null) {
+        if (this.updatedAt == null) {
             if (other.updatedAt != null)
                 return false;
-        } else if (!updatedAt.equals(other.updatedAt))
+        } else if (!this.updatedAt.equals(other.updatedAt))
             return false;
         return true;
     }

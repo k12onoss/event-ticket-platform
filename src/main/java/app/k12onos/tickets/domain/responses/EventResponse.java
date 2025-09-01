@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import app.k12onos.tickets.domain.entities.Event;
+import app.k12onos.tickets.domain.enums.EventStatus;
 
 public record EventResponse(
         UUID id,
@@ -15,6 +16,7 @@ public record EventResponse(
         LocalDateTime salesStart,
         LocalDateTime salesEnd,
         List<TicketTypeResponse> ticketTypes,
+        EventStatus status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
 
@@ -34,6 +36,7 @@ public record EventResponse(
                 event.getSalesStart(),
                 event.getSalesEnd(),
                 ticketTypeResponses,
+                event.getStatus(),
                 event.getCreatedAt(),
                 event.getUpdatedAt());
     }

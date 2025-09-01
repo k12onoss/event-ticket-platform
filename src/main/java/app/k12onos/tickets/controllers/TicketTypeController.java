@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import app.k12onos.tickets.services.TicketService;
 
 @RestController
-@RequestMapping(path = "/api/v1/events/{eventId}/ticket-types")
+@RequestMapping(path = "/api/v1/ticket-types")
 public class TicketTypeController {
 
     private final TicketService ticketService;

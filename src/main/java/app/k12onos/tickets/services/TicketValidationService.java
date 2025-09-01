@@ -2,7 +2,6 @@ package app.k12onos.tickets.services;
 
 import org.springframework.stereotype.Service;
 
-import app.k12onos.tickets.domain.QRPayload;
 import app.k12onos.tickets.domain.entities.QRCode;
 import app.k12onos.tickets.domain.entities.Ticket;
 import app.k12onos.tickets.domain.entities.TicketValidation;
@@ -12,6 +11,7 @@ import app.k12onos.tickets.domain.requests.TicketValidationRequest;
 import app.k12onos.tickets.exceptions.QRCodeNotFoundException;
 import app.k12onos.tickets.repositories.QRCodeRepository;
 import app.k12onos.tickets.repositories.TicketValidationRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class TicketValidationService {
@@ -27,15 +27,14 @@ public class TicketValidationService {
         this.ticketValidationRepository = ticketValidationRepository;
     }
 
+    @Transactional
     public TicketValidation validateTicket(TicketValidationRequest validationRequest) {
-        QRPayload payload = QRPayload.decodeFromBase64(validationRequest.value());
-
-        QRCode qrCode = qrCodeRepository
-                .findById(payload.qrCodeId())
+        QRCode qrCode = this.qrCodeRepository
+                .findByToken(validationRequest.token())
                 .orElseThrow(QRCodeNotFoundException::new);
 
         Ticket ticket = qrCode.getTicket();
-        long validValidationsCount = ticketValidationRepository.countValidValidationsByTicket(ticket.getId());
+        long validValidationsCount = this.ticketValidationRepository.countValidValidationsByTicket(ticket.getId());
 
         TicketValidationStatus status = qrCode.getStatus() == QRCodeStatus.ACTIVE && validValidationsCount == 0L
                 ? TicketValidationStatus.VALID
@@ -46,7 +45,7 @@ public class TicketValidationService {
         validation.setValidationMethod(validationRequest.validationMethod());
         validation.setTicket(ticket);
 
-        return ticketValidationRepository.save(validation);
+        return this.ticketValidationRepository.save(validation);
     }
 
 }

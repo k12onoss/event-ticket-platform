@@ -4,6 +4,7 @@ import app.k12onos.tickets.domain.enums.TicketValidationMethod;
 
 public record TicketValidationRequest(
         TicketValidationMethod validationMethod,
-        String value) {
+        String token,
+        String signature) {
 
 }
