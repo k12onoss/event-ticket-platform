@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.k12onos.tickets.security.utils.SecurityUtil;
 import app.k12onos.tickets.ticket_purchase.services.TicketPurchaseService;
 
 @RestController
@@ -25,17 +26,11 @@ public class TicketTypeController {
 
     @GetMapping("/{ticketTypeId}/tickets")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void purchaseTicket(
-            @AuthenticationPrincipal Jwt jwt,
-            @PathVariable UUID ticketTypeId) {
+    void purchaseTicket(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID ticketTypeId) {
 
-        UUID userId = this.parseUserId(jwt);
+        UUID userId = SecurityUtil.parseUserId(jwt);
 
         this.ticketService.purchaseTicket(userId, ticketTypeId);
-    }
-
-    private UUID parseUserId(Jwt jwt) {
-        return UUID.fromString(jwt.getSubject());
     }
 
 }

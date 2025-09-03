@@ -1,11 +1,7 @@
 package app.k12onos.tickets.ticket.exceptions;
 
-import app.k12onos.tickets.base.exceptions.EventTicketException;
-
-public class QrCodeNotFoundException extends EventTicketException {
-    public QrCodeNotFoundException() {
-
-    }
+public class QrCodeNotFoundException extends RuntimeException {
+    public QrCodeNotFoundException() {}
 
     public QrCodeNotFoundException(String message) {
         super(message);
@@ -20,10 +16,10 @@ public class QrCodeNotFoundException extends EventTicketException {
     }
 
     public QrCodeNotFoundException(
-            String message,
-            Throwable cause,
-            boolean enableSuppresion,
-            boolean writeableStackTrace) {
+        String message,
+        Throwable cause,
+        boolean enableSuppresion,
+        boolean writeableStackTrace) {
 
         super(message, cause, enableSuppresion, writeableStackTrace);
     }

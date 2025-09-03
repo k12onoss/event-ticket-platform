@@ -55,8 +55,7 @@ public class QrCode {
         this.updatedAt = updatedAt;
     }
 
-    public QrCode() {
-    }
+    public QrCode() {}
 
     public UUID getId() {
         return this.id;

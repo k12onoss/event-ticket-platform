@@ -1,3 +1,15 @@
+server:
+    port: ${PORT:8080}
+
+logging:
+    level:
+        org:
+            atmosphere: warn
+
+vaadin:
+    launch-browser: true
+    allowed-packages: com.vaadin,org.vaadin,com.flowingcode,app.k12onos.tickets
+
 spring:
     application:
         name: tickets
@@ -20,3 +32,19 @@ spring:
             resourceserver:
                 jwt:
                     issuer-uri: http://localhost:9090/realms/event-ticket-platform
+            
+            client:
+                registration:
+                    keycloak:
+                        provider: keycloak
+                        client-id: event-ticket-platform-app
+                        authorization-grant-type: authorization_code
+                        redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+                        scope: openid,profile
+                
+                provider:
+                    keycloak:
+                        issuer-uri: http://localhost:9090/realms/event-ticket-platform
+                        authorization-uri: http://localhost:9090/realms/event-ticket-platform/protocol/openid-connect/auth
+                        user-info-uri: http://localhost:9090/realms/event-ticket-platform/protocol/openid-connect/userinfo
+                        token-uri: http://localhost:9090/realms/event-ticket-platform/protocol/openid-connect/token

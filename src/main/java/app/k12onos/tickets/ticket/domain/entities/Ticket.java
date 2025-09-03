@@ -61,9 +61,16 @@ public class Ticket {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public Ticket(UUID id, TicketStatus status, TicketType ticketType, User purchaser,
-            List<TicketValidation> validations, List<QrCode> qrCodes, LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+    public Ticket(
+        UUID id,
+        TicketStatus status,
+        TicketType ticketType,
+        User purchaser,
+        List<TicketValidation> validations,
+        List<QrCode> qrCodes,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
+
         this.id = id;
         this.status = status;
         this.ticketType = ticketType;
@@ -74,8 +81,7 @@ public class Ticket {
         this.updatedAt = updatedAt;
     }
 
-    public Ticket() {
-    }
+    public Ticket() {}
 
     public UUID getId() {
         return this.id;

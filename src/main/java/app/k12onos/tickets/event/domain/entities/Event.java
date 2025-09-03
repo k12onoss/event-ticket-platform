@@ -80,10 +80,22 @@ public class Event {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public Event(UUID id, String name, LocalDateTime start, LocalDateTime end, String venue,
-            LocalDateTime salesStart, LocalDateTime salesEnd, EventStatus status, User organizer,
-            List<User> attendees, List<User> staff, List<TicketType> ticketTypes, LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+    public Event(
+        UUID id,
+        String name,
+        LocalDateTime start,
+        LocalDateTime end,
+        String venue,
+        LocalDateTime salesStart,
+        LocalDateTime salesEnd,
+        EventStatus status,
+        User organizer,
+        List<User> attendees,
+        List<User> staff,
+        List<TicketType> ticketTypes,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
+
         this.id = id;
         this.name = name;
         this.start = start;
@@ -100,8 +112,7 @@ public class Event {
         this.updatedAt = updatedAt;
     }
 
-    public Event() {
-    }
+    public Event() {}
 
     public UUID getId() {
         return this.id;

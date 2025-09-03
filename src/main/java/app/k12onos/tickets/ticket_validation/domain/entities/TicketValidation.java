@@ -50,8 +50,14 @@ public class TicketValidation {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public TicketValidation(UUID id, TicketValidationStatus status, TicketValidationMethod validationMethod,
-            Ticket ticket, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public TicketValidation(
+        UUID id,
+        TicketValidationStatus status,
+        TicketValidationMethod validationMethod,
+        Ticket ticket,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
+
         this.id = id;
         this.status = status;
         this.validationMethod = validationMethod;
@@ -60,8 +66,7 @@ public class TicketValidation {
         this.updatedAt = updatedAt;
     }
 
-    public TicketValidation() {
-    }
+    public TicketValidation() {}
 
     public UUID getId() {
         return this.id;

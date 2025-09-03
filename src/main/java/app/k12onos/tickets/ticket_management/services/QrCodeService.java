@@ -19,8 +19,8 @@ public class QrCodeService {
 
     public QrCode getActiveQrCodeForTicketAndPurchaser(UUID ticketId, UUID purchaserId) {
         return this.qrCodeRepository
-                .findActiveQrCodeForTicketAndPurchaser(ticketId, purchaserId)
-                .orElseThrow(QrCodeNotFoundException::new);
+            .findActiveQrCodeForTicketAndPurchaser(ticketId, purchaserId)
+            .orElseThrow(QrCodeNotFoundException::new);
     }
 
 }

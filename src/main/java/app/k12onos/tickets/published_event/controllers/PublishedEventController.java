@@ -33,8 +33,8 @@ public class PublishedEventController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<PublishedEventSummaryResponse> getPublishedEvents(
-            @RequestParam(required = false) String q,
-            Pageable pageable) {
+        @RequestParam(required = false) String q,
+        Pageable pageable) {
 
         Page<PublishedEventSummaryResponse> publishedEvents;
 
@@ -53,9 +53,9 @@ public class PublishedEventController {
         Optional<Event> publishedEvent = this.publishedEventService.getPublishedEvent(eventId);
 
         return publishedEvent
-                .map(PublishedEventResponse::from)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+            .map(PublishedEventResponse::from)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
 }

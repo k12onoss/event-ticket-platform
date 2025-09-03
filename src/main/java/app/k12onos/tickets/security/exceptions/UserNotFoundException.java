@@ -1,11 +1,7 @@
 package app.k12onos.tickets.security.exceptions;
 
-import app.k12onos.tickets.base.exceptions.EventTicketException;
-
-public class UserNotFoundException extends EventTicketException {
-    public UserNotFoundException() {
-
-    }
+public class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException() {}
 
     public UserNotFoundException(String message) {
         super(message);
@@ -20,10 +16,10 @@ public class UserNotFoundException extends EventTicketException {
     }
 
     public UserNotFoundException(
-            String message,
-            Throwable cause,
-            boolean enableSuppresion,
-            boolean writeableStackTrace) {
+        String message,
+        Throwable cause,
+        boolean enableSuppresion,
+        boolean writeableStackTrace) {
 
         super(message, cause, enableSuppresion, writeableStackTrace);
     }

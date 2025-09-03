@@ -20,8 +20,8 @@ public class TicketValidationService {
     private final TicketValidationRepository ticketValidationRepository;
 
     public TicketValidationService(
-            QrCodeRepository qrCodeRepository,
-            TicketValidationRepository ticketValidationRepository) {
+        QrCodeRepository qrCodeRepository,
+        TicketValidationRepository ticketValidationRepository) {
 
         this.qrCodeRepository = qrCodeRepository;
         this.ticketValidationRepository = ticketValidationRepository;
@@ -30,8 +30,8 @@ public class TicketValidationService {
     @Transactional
     public TicketValidation validateTicket(TicketValidationRequest validationRequest) {
         QrCode qrCode = this.qrCodeRepository
-                .findByToken(validationRequest.token())
-                .orElseThrow(QrCodeNotFoundException::new);
+            .findByToken(validationRequest.token())
+            .orElseThrow(QrCodeNotFoundException::new);
 
         Ticket ticket = qrCode.getTicket();
         long validValidationsCount = this.ticketValidationRepository.countValidValidationsByTicket(ticket.getId());

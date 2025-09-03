@@ -6,19 +6,19 @@ import java.util.UUID;
 import app.k12onos.tickets.event.domain.entities.Event;
 
 public record PublishedEventSummaryResponse(
-        UUID id,
-        String name,
-        LocalDateTime start,
-        LocalDateTime end,
-        String venue) {
+    UUID id,
+    String name,
+    LocalDateTime start,
+    LocalDateTime end,
+    String venue) {
 
     public static PublishedEventSummaryResponse from(Event event) {
         return new PublishedEventSummaryResponse(
-                event.getId(),
-                event.getName(),
-                event.getStart(),
-                event.getEnd(),
-                event.getVenue());
+            event.getId(),
+            event.getName(),
+            event.getStart(),
+            event.getEnd(),
+            event.getVenue());
     }
 
 }

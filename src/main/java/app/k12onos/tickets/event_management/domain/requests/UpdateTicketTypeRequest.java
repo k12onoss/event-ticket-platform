@@ -9,15 +9,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record UpdateTicketTypeRequest(
-        UUID id,
+    UUID id,
 
-        @NotBlank(message = "TicketType name is required") String name,
+    @NotBlank(message = "TicketType name is required") String name,
 
-        String description,
+    String description,
 
-        @NotNull(message = "Price is required") @PositiveOrZero(message = "Price must be greater than or equal to zero") Double price,
+    @NotNull(message = "Price is required") @PositiveOrZero(message = "Price must be greater than or equal to zero") Double price,
 
-        Integer totalAvailable) {
+    Integer totalAvailable) {
 
     public TicketType toEntity(Event event) {
         TicketType ticketType = new TicketType();

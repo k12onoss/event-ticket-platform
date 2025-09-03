@@ -48,8 +48,15 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public User(UUID id, String name, String email, List<Event> organizedEvents, List<Event> attendedEvents,
-            List<Event> staffedEvents, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(
+        UUID id,
+        String name,
+        String email,
+        List<Event> organizedEvents,
+        List<Event> attendedEvents,
+        List<Event> staffedEvents,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -60,8 +67,7 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public User() {
-    }
+    public User() {}
 
     public UUID getId() {
         return this.id;

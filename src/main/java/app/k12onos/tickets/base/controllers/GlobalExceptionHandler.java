@@ -76,12 +76,12 @@ public class GlobalExceptionHandler {
         this.logger.error("Caught MethodArgumentNotValidException " + ex.getMessage());
 
         String message = ex
-                .getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .findFirst()
-                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                .orElse("Validation error occured");
+            .getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .findFirst()
+            .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+            .orElse("Validation error occured");
         return new ErrorResponse(message);
     }
 
@@ -91,11 +91,11 @@ public class GlobalExceptionHandler {
         this.logger.error("Caught ConstraintViolationException " + ex.getMessage());
 
         String message = ex
-                .getConstraintViolations()
-                .stream()
-                .findFirst()
-                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
-                .orElse("Constraint violation occured");
+            .getConstraintViolations()
+            .stream()
+            .findFirst()
+            .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+            .orElse("Constraint violation occured");
         return new ErrorResponse(message);
     }
 

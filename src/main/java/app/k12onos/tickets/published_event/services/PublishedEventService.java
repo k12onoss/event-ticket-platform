@@ -14,16 +14,15 @@ import app.k12onos.tickets.published_event.domain.responses.PublishedEventSummar
 @Service
 public class PublishedEventService {
 
-    private final EventRepository eventRepository;    
-    
+    private final EventRepository eventRepository;
+
     public PublishedEventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
 
     public Page<PublishedEventSummaryResponse> getPublishedEvents(Pageable pageable) {
-        Page<PublishedEventSummaryResponse> publishedEvents = this.eventRepository.findPublishedEvents(pageable);
-
-        return publishedEvents;
+        Page<Event> publishedEvents = this.eventRepository.findPublishedEvents(pageable);
+        return publishedEvents.map(PublishedEventSummaryResponse::from);
     }
 
     public Page<Event> searchPublishedEvent(String query, Pageable pageable) {

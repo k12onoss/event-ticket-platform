@@ -1,12 +1,8 @@
 package app.k12onos.tickets.ticket_purchase.exceptions;
 
-import app.k12onos.tickets.base.exceptions.EventTicketException;
+public class TicketsSoldOutException extends RuntimeException {
 
-public class TicketsSoldOutException extends EventTicketException {
-
-    public TicketsSoldOutException() {
-
-    }
+    public TicketsSoldOutException() {}
 
     public TicketsSoldOutException(String message) {
         super(message);
@@ -21,10 +17,10 @@ public class TicketsSoldOutException extends EventTicketException {
     }
 
     public TicketsSoldOutException(
-            String message,
-            Throwable cause,
-            boolean enableSuppresion,
-            boolean writeableStackTrace) {
+        String message,
+        Throwable cause,
+        boolean enableSuppresion,
+        boolean writeableStackTrace) {
 
         super(message, cause, enableSuppresion, writeableStackTrace);
     }

@@ -32,8 +32,8 @@ public class EventService {
     @Transactional
     public Event createEvent(UUID organizerId, CreateEventRequest event) {
         User organizer = this.userRepository
-                .findById(organizerId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + organizerId + " not found."));
+            .findById(organizerId)
+            .orElseThrow(() -> new UserNotFoundException("User with id " + organizerId + " not found."));
 
         Event eventToCreate = event.toEntity(organizer);
 
@@ -41,7 +41,8 @@ public class EventService {
     }
 
     public Page<EventSummaryResponse> getEventsByOrganizer(UUID organizerId, Pageable pageable) {
-        return this.eventRepository.findEventsByOrganizer(organizerId, pageable);
+        Page<Event> events = this.eventRepository.findEventsByOrganizer(organizerId, pageable);
+        return events.map(EventSummaryResponse::from);
     }
 
     public Optional<Event> getEventByOrganizer(UUID organizerId, UUID eventId) {
@@ -49,14 +50,11 @@ public class EventService {
     }
 
     @Transactional
-    public Event updateEventByOrganizer(
-            UUID organizerId,
-            UUID eventId,
-            UpdateEventRequest updateRequest) {
+    public Event updateEventByOrganizer(UUID organizerId, UUID eventId, UpdateEventRequest updateRequest) {
 
         Event existingEvent = this.eventRepository
-                .findEventByOrganizer(organizerId, eventId)
-                .orElseThrow(() -> new EventNotFoundException("Event with id " + eventId + " not found"));
+            .findEventByOrganizer(organizerId, eventId)
+            .orElseThrow(() -> new EventNotFoundException("Event with id " + eventId + " not found"));
 
         updateRequest.updateEntity(existingEvent);
 

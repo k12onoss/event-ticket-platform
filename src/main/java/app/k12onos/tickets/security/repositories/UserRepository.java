@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository;
 import app.k12onos.tickets.security.domain.entities.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
-
-}
+public interface UserRepository extends JpaRepository<User, UUID> {}

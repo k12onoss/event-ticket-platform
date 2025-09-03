@@ -31,10 +31,7 @@ public class TokenUtil {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(new SecretKeySpec(HMAC_SECRET.getBytes(), "HmacSHA256"));
-            return Base64
-                    .getUrlEncoder()
-                    .withoutPadding()
-                    .encodeToString(mac.doFinal(token.getBytes()));
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(mac.doFinal(token.getBytes()));
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             throw new QrCodeGenerationException();
         }

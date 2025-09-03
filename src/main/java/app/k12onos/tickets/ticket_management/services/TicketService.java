@@ -11,12 +11,10 @@ import app.k12onos.tickets.ticket.repositories.TicketRepository;
 
 @Service
 public class TicketService {
- 
+
     private final TicketRepository ticketRepository;
 
-    public TicketService(
-            TicketRepository ticketRepository) {
-
+    public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
 

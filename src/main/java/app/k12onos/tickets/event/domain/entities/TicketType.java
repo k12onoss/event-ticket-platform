@@ -57,9 +57,17 @@ public class TicketType {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public TicketType(UUID id, String name, String description, Double price, Integer totalAvailable, Event event,
-            List<Ticket> tickets,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public TicketType(
+        UUID id,
+        String name,
+        String description,
+        Double price,
+        Integer totalAvailable,
+        Event event,
+        List<Ticket> tickets,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
+
         this.id = id;
         this.name = name;
         this.description = description;
@@ -71,8 +79,7 @@ public class TicketType {
         this.updatedAt = updatedAt;
     }
 
-    public TicketType() {
-    }
+    public TicketType() {}
 
     public UUID getId() {
         return this.id;

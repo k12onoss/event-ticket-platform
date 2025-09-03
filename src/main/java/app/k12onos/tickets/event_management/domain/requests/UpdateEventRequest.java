@@ -19,21 +19,21 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public record UpdateEventRequest(
-        @NotBlank(message = "Event name is required") String name,
+    @NotBlank(message = "Event name is required") String name,
 
-        LocalDateTime start,
+    LocalDateTime start,
 
-        LocalDateTime end,
+    LocalDateTime end,
 
-        @NotBlank(message = "Venue information is required") String venue,
+    @NotBlank(message = "Venue information is required") String venue,
 
-        LocalDateTime salesStart,
+    LocalDateTime salesStart,
 
-        LocalDateTime salesEnd,
+    LocalDateTime salesEnd,
 
-        @NotNull(message = "Event status is required") EventStatus status,
+    @NotNull(message = "Event status is required") EventStatus status,
 
-        @NotEmpty(message = "At least one ticket type is required") @Valid List<UpdateTicketTypeRequest> ticketTypes) {
+    @NotEmpty(message = "At least one ticket type is required") @Valid List<UpdateTicketTypeRequest> ticketTypes) {
 
     public void updateEntity(Event event) {
         event.setName(this.name());
@@ -45,18 +45,18 @@ public record UpdateEventRequest(
         event.setStatus(this.status());
 
         Set<UUID> ticketTypeIds = this
-                .ticketTypes()
-                .stream()
-                .map(UpdateTicketTypeRequest::id)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+            .ticketTypes()
+            .stream()
+            .map(UpdateTicketTypeRequest::id)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
 
         event.getTicketTypes().removeIf(ticketType -> !ticketTypeIds.contains(ticketType.getId()));
 
         Map<UUID, TicketType> existingTicketTypesMap = event
-                .getTicketTypes()
-                .stream()
-                .collect(Collectors.toMap(TicketType::getId, Function.identity()));
+            .getTicketTypes()
+            .stream()
+            .collect(Collectors.toMap(TicketType::getId, Function.identity()));
 
         for (UpdateTicketTypeRequest newTicketType : this.ticketTypes()) {
             if (newTicketType.id() == null) {

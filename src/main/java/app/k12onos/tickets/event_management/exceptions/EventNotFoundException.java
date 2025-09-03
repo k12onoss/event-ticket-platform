@@ -1,11 +1,7 @@
 package app.k12onos.tickets.event_management.exceptions;
 
-import app.k12onos.tickets.base.exceptions.EventTicketException;
-
-public class EventNotFoundException extends EventTicketException {
-    public EventNotFoundException() {
-
-    }
+public class EventNotFoundException extends RuntimeException {
+    public EventNotFoundException() {}
 
     public EventNotFoundException(String message) {
         super(message);
@@ -20,10 +16,10 @@ public class EventNotFoundException extends EventTicketException {
     }
 
     public EventNotFoundException(
-            String message,
-            Throwable cause,
-            boolean enableSuppresion,
-            boolean writeableStackTrace) {
+        String message,
+        Throwable cause,
+        boolean enableSuppresion,
+        boolean writeableStackTrace) {
 
         super(message, cause, enableSuppresion, writeableStackTrace);
     }
