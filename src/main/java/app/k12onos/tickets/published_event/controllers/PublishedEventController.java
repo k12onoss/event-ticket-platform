@@ -3,7 +3,6 @@ package app.k12onos.tickets.published_event.controllers;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -36,16 +35,15 @@ public class PublishedEventController {
         @RequestParam(required = false) String q,
         Pageable pageable) {
 
-        Page<PublishedEventSummaryResponse> publishedEvents;
+        PagedModel<PublishedEventSummaryResponse> publishedEvents;
 
         if (q != null && !q.isBlank()) {
-            var events = this.publishedEventService.searchPublishedEvent(q, pageable);
-            publishedEvents = events.map(PublishedEventSummaryResponse::from);
+            publishedEvents = this.publishedEventService.searchPublishedEvent(q, pageable);
         } else {
             publishedEvents = this.publishedEventService.getPublishedEvents(pageable);
         }
 
-        return new PagedModel<>(publishedEvents);
+        return publishedEvents;
     }
 
     @GetMapping("/{eventId}")

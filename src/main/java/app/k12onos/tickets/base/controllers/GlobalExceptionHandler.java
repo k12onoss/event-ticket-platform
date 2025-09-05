@@ -20,12 +20,12 @@ import jakarta.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(UserNotFoundException ex) {
-        this.logger.error("Caught UserNotFoundException " + ex.getMessage());
+        LOG.error("Caught UserNotFoundException " + ex.getMessage());
 
         return new ErrorResponse("User not found");
     }
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EventNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(EventNotFoundException ex) {
-        this.logger.error("Caught EventNotFoundException " + ex.getMessage());
+        LOG.error("Caught EventNotFoundException " + ex.getMessage());
 
         return new ErrorResponse("Event not found");
     }
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TicketTypeNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(TicketTypeNotFoundException ex) {
-        this.logger.error("Caught TicketTypeNotFoundException " + ex.getMessage());
+        LOG.error("Caught TicketTypeNotFoundException " + ex.getMessage());
 
         return new ErrorResponse("TicketType not found");
     }
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(QrCodeNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(QrCodeNotFoundException ex) {
-        this.logger.error("Caught QrCodeNotFoundException " + ex.getMessage());
+        LOG.error("Caught QrCodeNotFoundException " + ex.getMessage());
 
         return new ErrorResponse("QR code not found");
     }
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TicketsSoldOutException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(TicketsSoldOutException ex) {
-        this.logger.error("Caught TicketsSoldOutException " + ex.getMessage());
+        LOG.error("Caught TicketsSoldOutException " + ex.getMessage());
 
         return new ErrorResponse("Tickets are sold out");
     }
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(QrCodeGenerationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(QrCodeGenerationException ex) {
-        this.logger.error("Caught QrCodeGenerationException " + ex.getMessage());
+        LOG.error("Caught QrCodeGenerationException " + ex.getMessage());
 
         return new ErrorResponse("Error generating QR code");
     }
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(MethodArgumentNotValidException ex) {
-        this.logger.error("Caught MethodArgumentNotValidException " + ex.getMessage());
+        LOG.error("Caught MethodArgumentNotValidException " + ex.getMessage());
 
         String message = ex
             .getBindingResult()
@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(ConstraintViolationException ex) {
-        this.logger.error("Caught ConstraintViolationException " + ex.getMessage());
+        LOG.error("Caught ConstraintViolationException " + ex.getMessage());
 
         String message = ex
             .getConstraintViolations()
@@ -102,7 +102,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(Exception ex) {
-        this.logger.error("Caught exception", ex);
+        LOG.error("Caught exception", ex);
 
         return new ErrorResponse("An unknown error occured");
     }

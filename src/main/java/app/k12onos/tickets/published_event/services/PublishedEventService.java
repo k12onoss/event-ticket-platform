@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
 import app.k12onos.tickets.event.domain.entities.Event;
@@ -20,13 +21,18 @@ public class PublishedEventService {
         this.eventRepository = eventRepository;
     }
 
-    public Page<PublishedEventSummaryResponse> getPublishedEvents(Pageable pageable) {
+    public PagedModel<PublishedEventSummaryResponse> getPublishedEvents(Pageable pageable) {
         Page<Event> publishedEvents = this.eventRepository.findPublishedEvents(pageable);
-        return publishedEvents.map(PublishedEventSummaryResponse::from);
+        Page<PublishedEventSummaryResponse> publishedEventSummaries = publishedEvents
+            .map(PublishedEventSummaryResponse::from);
+        return new PagedModel<>(publishedEventSummaries);
     }
 
-    public Page<Event> searchPublishedEvent(String query, Pageable pageable) {
-        return this.eventRepository.searchPublishedEvents(query, pageable);
+    public PagedModel<PublishedEventSummaryResponse> searchPublishedEvent(String query, Pageable pageable) {
+        Page<Event> publishedEvents = this.eventRepository.searchPublishedEvents(query, pageable);
+        Page<PublishedEventSummaryResponse> publishedEventSummaries = publishedEvents
+            .map(PublishedEventSummaryResponse::from);
+        return new PagedModel<>(publishedEventSummaries);
     }
 
     public Optional<Event> getPublishedEvent(UUID id) {
