@@ -13,6 +13,7 @@ import app.k12onos.tickets.event.domain.entities.Event;
 import app.k12onos.tickets.event.repositories.EventRepository;
 import app.k12onos.tickets.event_management.domain.requests.CreateEventRequest;
 import app.k12onos.tickets.event_management.domain.requests.UpdateEventRequest;
+import app.k12onos.tickets.event_management.domain.responses.EventResponse;
 import app.k12onos.tickets.event_management.domain.responses.EventSummaryResponse;
 import app.k12onos.tickets.event_management.exceptions.EventNotFoundException;
 import app.k12onos.tickets.security.domain.entities.User;
@@ -47,8 +48,9 @@ public class EventService {
         return new PagedModel<>(eventSummaries);
     }
 
-    public Optional<Event> getEventByOrganizer(UUID organizerId, UUID eventId) {
-        return this.eventRepository.findEventByOrganizer(organizerId, eventId);
+    public Optional<EventResponse> getEventByOrganizer(UUID organizerId, UUID eventId) {
+        Optional<Event> event = this.eventRepository.findEventByOrganizer(organizerId, eventId);
+        return event.map(EventResponse::from);
     }
 
     @Transactional
@@ -65,7 +67,7 @@ public class EventService {
 
     @Transactional
     public void deleteEventByOrganizer(UUID organizerId, UUID eventId) {
-        this.getEventByOrganizer(organizerId, eventId).ifPresent(this.eventRepository::delete);
+        this.eventRepository.findEventByOrganizer(organizerId, eventId).ifPresent(this.eventRepository::delete);
     }
 
 }

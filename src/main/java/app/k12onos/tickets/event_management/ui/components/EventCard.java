@@ -1,5 +1,7 @@
 package app.k12onos.tickets.event_management.ui.components;
 
+import java.util.UUID;
+
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -15,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
 import com.vaadin.flow.theme.lumo.LumoUtility.BorderRadius;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
@@ -27,6 +30,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import app.k12onos.tickets.base.utils.DateTimeUtil;
 import app.k12onos.tickets.event.domain.enums.EventStatus;
 import app.k12onos.tickets.event_management.domain.responses.EventSummaryResponse;
+import app.k12onos.tickets.event_management.ui.views.EventFormView;
 
 public class EventCard extends Card {
 
@@ -60,7 +64,7 @@ public class EventCard extends Card {
         this.confirmDeleteDialog.addConfirmListener(_ -> onDeleteEventCallback.run());
 
         this.add(titleLayout, venueLayout, timeLayout, salesTimeLayout);
-        this.addToFooter(this.createFooterLayout());
+        this.addToFooter(this.createFooterLayout(event.id()));
     }
 
     private HorizontalLayout createTitleLayout(String name, EventStatus status) {
@@ -117,23 +121,23 @@ public class EventCard extends Card {
         return confirmDeleteDialog;
     }
 
-    private HorizontalLayout createFooterLayout() {
-        Span editSpan = new Span("Edit");
-        editSpan.addClassNames(Background.PRIMARY_10, BorderRadius.SMALL);
-        editSpan.addClassNames(Padding.Vertical.XSMALL, Padding.Horizontal.LARGE);
-        editSpan.addClassNames(TextColor.PRIMARY, TextAlignment.CENTER);
+    private HorizontalLayout createFooterLayout(UUID id) {
+        RouterLink editButton = EventFormView.createEventFormLink("Edit", id);
+        editButton.addClassNames(Background.PRIMARY_10, BorderRadius.SMALL);
+        editButton.addClassNames(Padding.Vertical.XSMALL, Padding.Horizontal.LARGE);
+        editButton.addClassNames(TextColor.PRIMARY, TextAlignment.CENTER);
 
         Button deleteButton = new Button("Delete", _ -> this.confirmDeleteDialog.open());
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         deleteButton.addClassNames(Background.ERROR_10, Margin.NONE);
 
-        HorizontalLayout footerLayout = new HorizontalLayout(editSpan, deleteButton);
+        HorizontalLayout footerLayout = new HorizontalLayout(editButton, deleteButton);
         footerLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         footerLayout.setJustifyContentMode(JustifyContentMode.CENTER);
         footerLayout.setPadding(false);
         footerLayout.setMargin(false);
         footerLayout.setWidthFull();
-        footerLayout.setFlexGrow(1, editSpan);
+        footerLayout.setFlexGrow(1, editButton);
         footerLayout.setFlexGrow(1, deleteButton);
 
         return footerLayout;

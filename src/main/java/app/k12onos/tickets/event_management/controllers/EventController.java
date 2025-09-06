@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.k12onos.tickets.event.domain.entities.Event;
@@ -38,7 +39,8 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<EventResponse> createEvent(
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventResponse createEvent(
         @AuthenticationPrincipal Jwt jwt,
         @Valid @RequestBody CreateEventRequest createEventRequest) {
 
@@ -46,35 +48,27 @@ public class EventController {
 
         Event createdEvent = this.eventService.createEvent(userId, createEventRequest);
 
-        EventResponse createEventResponse = EventResponse.from(createdEvent);
-
-        return new ResponseEntity<>(createEventResponse, HttpStatus.CREATED);
+        return EventResponse.from(createdEvent);
     }
 
     @GetMapping
-    public ResponseEntity<PagedModel<EventSummaryResponse>> getEvents(
-        @AuthenticationPrincipal Jwt jwt,
-        Pageable pageable) {
-
+    public PagedModel<EventSummaryResponse> getEvents(@AuthenticationPrincipal Jwt jwt, Pageable pageable) {
         UUID userId = SecurityUtil.parseUserId(jwt);
 
-        PagedModel<EventSummaryResponse> events = this.eventService.getEventsByOrganizer(userId, pageable);
-
-        return ResponseEntity.ok(events);
+        return this.eventService.getEventsByOrganizer(userId, pageable);
     }
 
     @GetMapping("/{eventId}")
     public ResponseEntity<EventResponse> getEvent(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID eventId) {
-
         UUID userId = SecurityUtil.parseUserId(jwt);
 
-        Optional<Event> event = this.eventService.getEventByOrganizer(userId, eventId);
+        Optional<EventResponse> event = this.eventService.getEventByOrganizer(userId, eventId);
 
-        return event.map(EventResponse::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return event.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{eventId}")
-    public ResponseEntity<EventResponse> updateEvent(
+    public EventResponse updateEvent(
         @AuthenticationPrincipal Jwt jwt,
         @PathVariable UUID eventId,
         @Valid @RequestBody UpdateEventRequest updateEventRequest) {
@@ -83,17 +77,14 @@ public class EventController {
 
         Event updatedEvent = this.eventService.updateEventByOrganizer(userId, eventId, updateEventRequest);
 
-        EventResponse updatedEventResponse = EventResponse.from(updatedEvent);
-
-        return ResponseEntity.ok(updatedEventResponse);
+        return EventResponse.from(updatedEvent);
     }
 
     @DeleteMapping("/{eventId}")
-    public ResponseEntity<Void> deleteEvent(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID eventId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEvent(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID eventId) {
         UUID userId = SecurityUtil.parseUserId(jwt);
         this.eventService.deleteEventByOrganizer(userId, eventId);
-
-        return ResponseEntity.noContent().build();
     }
 
 }
