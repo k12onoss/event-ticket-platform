@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import app.k12onos.tickets.security.domain.UserAdapter;
 import app.k12onos.tickets.security.domain.dto.UserDto;
-import app.k12onos.tickets.security.domain.entities.User;
 import app.k12onos.tickets.security.services.UserService;
 import app.k12onos.tickets.security.utils.SecurityUtil;
 
@@ -32,13 +31,13 @@ public class OidcUserAdapterService implements OAuth2UserService<OidcUserRequest
         OidcUserService oidcUserService = new OidcUserService();
         OidcUser oidcUser = oidcUserService.loadUser(userRequest);
 
-        User user = this.userService.findOrCreateUser(oidcUser);
+        UserDto user = this.userService.findOrCreateUser(oidcUser);
 
         OidcIdToken idToken = userRequest.getIdToken();
         Collection<GrantedAuthority> authorities = SecurityUtil.mapAuthorities(idToken.getClaimAsMap("realm_access"));
         OidcUser enrichedOidcUser = new DefaultOidcUser(authorities, idToken, oidcUser.getUserInfo());
 
-        return new UserAdapter(UserDto.from(user), enrichedOidcUser);
+        return new UserAdapter(user, enrichedOidcUser);
     }
 
 }

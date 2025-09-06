@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+import app.k12onos.tickets.security.domain.UserRoles;
+
 @Configuration
 public class RestApiSecurityConfig {
 
@@ -24,11 +26,11 @@ public class RestApiSecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/v1/published-events/**")
                     .permitAll()
                     .requestMatchers("/api/v1/ticket-types/**")
-                    .hasRole("ATTENDEE")
+                    .hasRole(UserRoles.ATTENDEE)
                     .requestMatchers("/api/v1/events/**")
-                    .hasRole("ORGANIZER")
+                    .hasRole(UserRoles.ORGANIZER)
                     .requestMatchers("/api/v1/ticket-validations")
-                    .hasRole("STAFF")
+                    .hasRole(UserRoles.STAFF)
                     .requestMatchers("/api/**")
                     .authenticated())
             .csrf(CsrfConfigurer::disable)

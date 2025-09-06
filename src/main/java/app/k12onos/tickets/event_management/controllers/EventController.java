@@ -3,7 +3,6 @@ package app.k12onos.tickets.event_management.controllers;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -59,9 +58,9 @@ public class EventController {
 
         UUID userId = SecurityUtil.parseUserId(jwt);
 
-        Page<EventSummaryResponse> events = this.eventService.getEventsByOrganizer(userId, pageable);
+        PagedModel<EventSummaryResponse> events = this.eventService.getEventsByOrganizer(userId, pageable);
 
-        return ResponseEntity.ok(new PagedModel<>(events));
+        return ResponseEntity.ok(events);
     }
 
     @GetMapping("/{eventId}")

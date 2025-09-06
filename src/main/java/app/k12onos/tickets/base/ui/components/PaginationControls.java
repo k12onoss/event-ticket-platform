@@ -1,5 +1,7 @@
 package app.k12onos.tickets.base.ui.components;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel.PageMetadata;
 
@@ -30,7 +32,7 @@ public class PaginationControls extends HorizontalLayout {
 
     private SerializableConsumer<Pageable> pageChangedListener;
 
-    public PaginationControls() {
+    public PaginationControls(List<Integer> pageSizes) {
         this.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         this.setSpacing("0.3rem");
         this.setWidthFull();
@@ -43,7 +45,7 @@ public class PaginationControls extends HorizontalLayout {
         this.pageSizeSelect.addThemeVariants(SelectVariant.LUMO_SMALL);
         this.pageSizeSelect.getStyle().set("--vaadin-input-field-value-font-size", "var(--lumo-font-size-s)");
         this.pageSizeSelect.setWidth("4.8rem");
-        this.pageSizeSelect.setItems(8, 20, 60, 100);
+        this.pageSizeSelect.setItems(pageSizes);
         this.pageSizeSelect.addValueChangeListener(e -> {
             if (e.isFromClient()) {
                 this.pageChanged();

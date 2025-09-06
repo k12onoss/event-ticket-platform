@@ -1,5 +1,7 @@
 package app.k12onos.tickets.published_event.ui.views;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 
@@ -39,7 +41,7 @@ public class PublishedEventsView extends VerticalLayout implements AfterNavigati
         SearchField searchField = new SearchField();
         searchField.setSearchListner(searchQuery -> this.updateEvents(searchQuery, Pageable.ofSize(8).withPage(0)));
 
-        this.paginationControls = new PaginationControls();
+        this.paginationControls = new PaginationControls(List.of(8, 20, 60, 100));
         this.paginationControls.setPageChangedListner(pageable -> this.updateEvents(searchField.getValue(), pageable));
         this.paginationControls.addToMiddle(searchField);
 

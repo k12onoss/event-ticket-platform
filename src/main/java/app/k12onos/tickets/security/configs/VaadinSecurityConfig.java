@@ -11,6 +11,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.vaadin.flow.spring.security.VaadinAwareSecurityContextHolderStrategyConfiguration;
 import com.vaadin.flow.spring.security.VaadinSecurityConfigurer;
 
+import app.k12onos.tickets.security.ui.views.SignInView;
+
 @Configuration
 @EnableWebSecurity
 @Import(VaadinAwareSecurityContextHolderStrategyConfiguration.class)
@@ -20,9 +22,7 @@ public class VaadinSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, OidcUserAdapterService userService) throws Exception {
         http
-            .with(
-                VaadinSecurityConfigurer.vaadin(),
-                configurer -> configurer.oauth2LoginPage("/oauth2/authorization/keycloak"))
+            .with(VaadinSecurityConfigurer.vaadin(), configurer -> configurer.oauth2LoginPage(SignInView.path))
             .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo.oidcUserService(userService)));
 
         return http.build();

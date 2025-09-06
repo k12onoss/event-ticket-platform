@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +41,10 @@ public class EventService {
         return this.eventRepository.save(eventToCreate);
     }
 
-    public Page<EventSummaryResponse> getEventsByOrganizer(UUID organizerId, Pageable pageable) {
+    public PagedModel<EventSummaryResponse> getEventsByOrganizer(UUID organizerId, Pageable pageable) {
         Page<Event> events = this.eventRepository.findEventsByOrganizer(organizerId, pageable);
-        return events.map(EventSummaryResponse::from);
+        Page<EventSummaryResponse> eventSummaries = events.map(EventSummaryResponse::from);
+        return new PagedModel<>(eventSummaries);
     }
 
     public Optional<Event> getEventByOrganizer(UUID organizerId, UUID eventId) {

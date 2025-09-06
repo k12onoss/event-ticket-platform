@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import app.k12onos.tickets.security.domain.dto.UserDto;
 import app.k12onos.tickets.security.domain.entities.User;
 import app.k12onos.tickets.security.repositories.UserRepository;
 
@@ -26,10 +27,14 @@ public class UserService {
         }
     }
 
-    public User findOrCreateUser(OidcUser oidcUser) {
+    public UserDto findOrCreateUser(OidcUser oidcUser) {
         UUID id = UUID.fromString(oidcUser.getSubject());
 
-        return this.userRepository.findById(id).orElse(this.createUser(id, oidcUser.getName(), oidcUser.getEmail()));
+        User user = this.userRepository
+            .findById(id)
+            .orElseGet(() -> this.createUser(id, oidcUser.getFullName(), oidcUser.getEmail()));
+
+        return UserDto.from(user);
     }
 
     private User createUser(UUID id, String name, String email) {
