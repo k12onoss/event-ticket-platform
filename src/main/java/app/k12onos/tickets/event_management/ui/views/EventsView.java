@@ -66,6 +66,7 @@ public class EventsView extends VerticalLayout implements AfterNavigationObserve
         this.eventsLayout = new HorizontalLayout(JustifyContentMode.CENTER);
         this.eventsLayout.setWrap(true);
         this.eventsLayout.setPadding(false);
+        this.eventsLayout.setWidthFull();
 
         this.add(this.paginationControls, this.eventsLayout);
 

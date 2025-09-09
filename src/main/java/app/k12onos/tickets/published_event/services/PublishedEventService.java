@@ -9,6 +9,7 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
 import app.k12onos.tickets.event.domain.entities.Event;
+import app.k12onos.tickets.event.domain.enums.EventStatus;
 import app.k12onos.tickets.event.repositories.EventRepository;
 import app.k12onos.tickets.published_event.domain.responses.PublishedEventSummaryResponse;
 
@@ -22,7 +23,7 @@ public class PublishedEventService {
     }
 
     public PagedModel<PublishedEventSummaryResponse> getPublishedEvents(Pageable pageable) {
-        Page<Event> publishedEvents = this.eventRepository.findPublishedEvents(pageable);
+        Page<Event> publishedEvents = this.eventRepository.findByStatus(EventStatus.PUBLISHED, pageable);
         Page<PublishedEventSummaryResponse> publishedEventSummaries = publishedEvents
             .map(PublishedEventSummaryResponse::from);
         return new PagedModel<>(publishedEventSummaries);

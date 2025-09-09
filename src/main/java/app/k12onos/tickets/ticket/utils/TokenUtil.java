@@ -8,12 +8,16 @@ import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import app.k12onos.tickets.ticket.exceptions.QrCodeGenerationException;
 
 public class TokenUtil {
 
     private static final int TOKEN_LENGTH = 16;
     private static final String BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    @Value("${hmac.secret}")
     private static final String HMAC_SECRET = System.getenv("HMAC_SECRET");
 
     private static final SecureRandom random = new SecureRandom();

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import app.k12onos.tickets.event.domain.entities.Event;
+import app.k12onos.tickets.event.domain.enums.EventStatus;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
@@ -21,10 +22,9 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @Query("SELECT E FROM Event E LEFT JOIN FETCH E.ticketTypes WHERE E.organizer.id = ?1 AND E.id = ?2")
     Optional<Event> findEventByOrganizer(UUID organizerId, UUID eventId);
 
-    @Query("SELECT E FROM Event E WHERE E.status = EventStatus.PUBLISHED")
-    Page<Event> findPublishedEvents(Pageable pageable);
+    Page<Event> findByStatus(EventStatus status, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM events WHERE status = 'PUBLISHED' AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)", countQuery = "SELECT COUNT(*) FROM events WHERE status = 'PUBLISHED' AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)")
+    @Query(nativeQuery = true, value = "SELECT * FROM events WHERE status = 'PUBLISHED'::event_status AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)", countQuery = "SELECT COUNT(*) FROM events WHERE status = 'PUBLISHED'::event_status AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)")
     Page<Event> searchPublishedEvents(@Param("searchTerm") String searchTerm, Pageable pageable);
 
     @Query("SELECT E FROM Event E JOIN FETCH E.ticketTypes WHERE E.id = ?1 AND E.status = EventStatus.PUBLISHED")

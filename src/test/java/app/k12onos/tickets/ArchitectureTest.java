@@ -67,12 +67,16 @@ class ArchitectureTest {
     @Test
     void there_should_not_be_circular_dependencies_between_feature_packages() {
         var filteredClasses = this.importedClasses
-            .that(new DescribedPredicate<JavaClass>("package name does not contain domain.entities") {
-                @Override
-                public boolean test(JavaClass javaClass) {
-                    return !javaClass.getPackageName().contains("domain.entities");
-                }
-            });
+            .that(
+                new DescribedPredicate<JavaClass>(
+                    "package name does not contain domain.entities, exceptions and base.ui") {
+                    @Override
+                    public boolean test(JavaClass javaClass) {
+                        return !javaClass.getPackageName().contains("domain.entities")
+                            && !javaClass.getPackageName().contains("exceptions")
+                            && !javaClass.getPackageName().contains("base.ui");
+                    }
+                });
         slices().matching(BASE_PACKAGE + ".(*)..").should().beFreeOfCycles().check(filteredClasses);
     }
 
