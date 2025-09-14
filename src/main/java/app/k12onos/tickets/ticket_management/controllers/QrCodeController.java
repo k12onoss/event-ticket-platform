@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.k12onos.tickets.security.utils.SecurityUtil;
-import app.k12onos.tickets.ticket.domain.entities.QrCode;
 import app.k12onos.tickets.ticket_management.domain.responses.QrCodeResponse;
 import app.k12onos.tickets.ticket_management.services.QrCodeService;
 
@@ -26,12 +25,9 @@ public class QrCodeController {
 
     @GetMapping
     QrCodeResponse getActiveQrCode(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID ticketId) {
-
         UUID userId = SecurityUtil.parseUserId(jwt);
 
-        QrCode qrCode = this.qrCodeService.getActiveQrCodeForTicketAndPurchaser(ticketId, userId);
-
-        return QrCodeResponse.from(qrCode);
+        return this.qrCodeService.getActiveQrCodeForTicketAndPurchaser(ticketId, userId);
     }
 
 }

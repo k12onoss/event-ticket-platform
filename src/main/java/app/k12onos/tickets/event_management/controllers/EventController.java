@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.k12onos.tickets.event.domain.entities.Event;
+import app.k12onos.tickets.event_management.domain.requests.ConfirmUploadRequest;
 import app.k12onos.tickets.event_management.domain.requests.CreateEventRequest;
 import app.k12onos.tickets.event_management.domain.requests.UpdateEventRequest;
+import app.k12onos.tickets.event_management.domain.requests.UploadUrlRequest;
 import app.k12onos.tickets.event_management.domain.responses.EventResponse;
 import app.k12onos.tickets.event_management.domain.responses.EventSummaryResponse;
+import app.k12onos.tickets.event_management.domain.responses.UploadUrlResponse;
 import app.k12onos.tickets.event_management.services.EventService;
 import app.k12onos.tickets.security.utils.SecurityUtil;
 import jakarta.validation.Valid;
@@ -42,13 +44,11 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     public EventResponse createEvent(
         @AuthenticationPrincipal Jwt jwt,
-        @Valid @RequestBody CreateEventRequest createEventRequest) {
+        @Valid @RequestBody CreateEventRequest createRequest) {
 
         UUID userId = SecurityUtil.parseUserId(jwt);
 
-        Event createdEvent = this.eventService.createEvent(userId, createEventRequest);
-
-        return EventResponse.from(createdEvent);
+        return this.eventService.createEvent(userId, createRequest);
     }
 
     @GetMapping
@@ -71,13 +71,11 @@ public class EventController {
     public EventResponse updateEvent(
         @AuthenticationPrincipal Jwt jwt,
         @PathVariable UUID eventId,
-        @Valid @RequestBody UpdateEventRequest updateEventRequest) {
+        @Valid @RequestBody UpdateEventRequest updateRequest) {
 
         UUID userId = SecurityUtil.parseUserId(jwt);
 
-        Event updatedEvent = this.eventService.updateEventByOrganizer(userId, eventId, updateEventRequest);
-
-        return EventResponse.from(updatedEvent);
+        return this.eventService.updateEventByOrganizer(userId, eventId, updateRequest);
     }
 
     @DeleteMapping("/{eventId}")
@@ -85,6 +83,27 @@ public class EventController {
     public void deleteEvent(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID eventId) {
         UUID userId = SecurityUtil.parseUserId(jwt);
         this.eventService.deleteEventByOrganizer(userId, eventId);
+    }
+
+    @PostMapping("/{id}/upload")
+    UploadUrlResponse getUploadResponse(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable UUID id,
+        @RequestBody UploadUrlRequest uploadUrlRequest) {
+
+        UUID userId = SecurityUtil.parseUserId(jwt);
+        return this.eventService.generateUploadUrl(userId, id, uploadUrlRequest);
+    }
+
+    @PostMapping("/{id}/confirm")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void confirmUpload(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable UUID id,
+        @Valid @RequestBody ConfirmUploadRequest confirmUploadRequest) {
+
+        UUID userId = SecurityUtil.parseUserId(jwt);
+        this.eventService.confirmUpload(userId, id, confirmUploadRequest);
     }
 
 }

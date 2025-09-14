@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.k12onos.tickets.event.domain.entities.Event;
 import app.k12onos.tickets.published_event.domain.responses.PublishedEventResponse;
 import app.k12onos.tickets.published_event.domain.responses.PublishedEventSummaryResponse;
 import app.k12onos.tickets.published_event.services.PublishedEventService;
@@ -48,12 +47,9 @@ public class PublishedEventController {
 
     @GetMapping("/{eventId}")
     public ResponseEntity<PublishedEventResponse> getPublishedEvent(@PathVariable UUID eventId) {
-        Optional<Event> publishedEvent = this.publishedEventService.getPublishedEvent(eventId);
+        Optional<PublishedEventResponse> publishedEvent = this.publishedEventService.getPublishedEvent(eventId);
 
-        return publishedEvent
-            .map(PublishedEventResponse::from)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+        return publishedEvent.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
 }

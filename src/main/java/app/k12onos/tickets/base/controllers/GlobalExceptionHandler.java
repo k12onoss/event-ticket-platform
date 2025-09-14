@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import app.k12onos.tickets.base.domain.responses.ErrorResponse;
+import app.k12onos.tickets.event.exceptions.DeleteFileFailedException;
+import app.k12onos.tickets.event.exceptions.GeneratePresignedUrlFailedException;
 import app.k12onos.tickets.event_management.exceptions.EventNotFoundException;
 import app.k12onos.tickets.event_management.exceptions.TicketTypeNotFoundException;
 import app.k12onos.tickets.security.exceptions.UserNotFoundException;
@@ -68,6 +70,22 @@ public class GlobalExceptionHandler {
         LOG.error("Caught QrCodeGenerationException " + ex.getMessage());
 
         return new ErrorResponse("Error generating QR code");
+    }
+
+    @ExceptionHandler(GeneratePresignedUrlFailedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleException(GeneratePresignedUrlFailedException ex) {
+        LOG.error("Caught GeneratePresignedUrlFailedException " + ex.getMessage());
+
+        return new ErrorResponse("Error generating a presigned url for file upload");
+    }
+
+    @ExceptionHandler(DeleteFileFailedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleException(DeleteFileFailedException ex) {
+        LOG.error("Caught DeleteFileFailedException " + ex.getMessage());
+
+        return new ErrorResponse("Error deleting the file");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

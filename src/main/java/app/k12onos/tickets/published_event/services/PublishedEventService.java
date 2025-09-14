@@ -11,33 +11,40 @@ import org.springframework.stereotype.Service;
 import app.k12onos.tickets.event.domain.entities.Event;
 import app.k12onos.tickets.event.domain.enums.EventStatus;
 import app.k12onos.tickets.event.repositories.EventRepository;
+import app.k12onos.tickets.event.services.S3Service;
+import app.k12onos.tickets.published_event.domain.responses.PublishedEventResponse;
 import app.k12onos.tickets.published_event.domain.responses.PublishedEventSummaryResponse;
 
 @Service
 public class PublishedEventService {
 
     private final EventRepository eventRepository;
+    private final S3Service s3Service;
 
-    public PublishedEventService(EventRepository eventRepository) {
+    public PublishedEventService(EventRepository eventRepository, S3Service s3Service) {
         this.eventRepository = eventRepository;
+        this.s3Service = s3Service;
     }
 
     public PagedModel<PublishedEventSummaryResponse> getPublishedEvents(Pageable pageable) {
         Page<Event> publishedEvents = this.eventRepository.findByStatus(EventStatus.PUBLISHED, pageable);
         Page<PublishedEventSummaryResponse> publishedEventSummaries = publishedEvents
-            .map(PublishedEventSummaryResponse::from);
+            .map(e -> PublishedEventSummaryResponse.from(e, this.s3Service.generateReadUrl(e.getPosterKey())));
         return new PagedModel<>(publishedEventSummaries);
     }
 
     public PagedModel<PublishedEventSummaryResponse> searchPublishedEvent(String query, Pageable pageable) {
         Page<Event> publishedEvents = this.eventRepository.searchPublishedEvents(query, pageable);
         Page<PublishedEventSummaryResponse> publishedEventSummaries = publishedEvents
-            .map(PublishedEventSummaryResponse::from);
+            .map(e -> PublishedEventSummaryResponse.from(e, this.s3Service.generateReadUrl(e.getPosterKey())));
         return new PagedModel<>(publishedEventSummaries);
     }
 
-    public Optional<Event> getPublishedEvent(UUID id) {
-        return this.eventRepository.findPublishedEvent(id);
+    public Optional<PublishedEventResponse> getPublishedEvent(UUID id) {
+        Optional<Event> publishedEvent = this.eventRepository.findPublishedEvent(id);
+
+        return publishedEvent
+            .map(e -> PublishedEventResponse.from(e, this.s3Service.generateReadUrl(e.getBannerKey())));
     }
 
 }

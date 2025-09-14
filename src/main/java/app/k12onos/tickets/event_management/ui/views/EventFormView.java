@@ -20,8 +20,14 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 
 import app.k12onos.tickets.event_management.domain.dto.EventRequest;
+import app.k12onos.tickets.event_management.domain.dto.ImageValue;
+import app.k12onos.tickets.event_management.domain.requests.ConfirmUploadRequest;
+import app.k12onos.tickets.event_management.domain.requests.UploadUrlRequest;
+import app.k12onos.tickets.event_management.domain.responses.EventResponse;
+import app.k12onos.tickets.event_management.domain.responses.UploadUrlResponse;
 import app.k12onos.tickets.event_management.exceptions.EventNotFoundException;
 import app.k12onos.tickets.event_management.services.EventService;
+import app.k12onos.tickets.event_management.services.ImageService;
 import app.k12onos.tickets.event_management.ui.components.EventForm;
 import app.k12onos.tickets.security.domain.UserAdapter;
 import app.k12onos.tickets.security.domain.UserRoles;
@@ -33,14 +39,20 @@ public class EventFormView extends VerticalLayout implements HasDynamicTitle, Ha
 
     private UUID eventIdForEdit;
 
-    private final AuthenticationContext authenticationContext;
+    private final transient AuthenticationContext authenticationContext;
     private final EventService eventService;
+    private final ImageService imageService;
 
     private final EventForm eventForm;
 
-    public EventFormView(AuthenticationContext authenticationContext, EventService eventsService) {
+    public EventFormView(
+        AuthenticationContext authenticationContext,
+        EventService eventsService,
+        ImageService imageService) {
+
         this.authenticationContext = authenticationContext;
         this.eventService = eventsService;
+        this.imageService = imageService;
 
         this.addClassNames(Flex.GROW, MaxWidth.SCREEN_XLARGE, Margin.AUTO);
 
@@ -64,11 +76,16 @@ public class EventFormView extends VerticalLayout implements HasDynamicTitle, Ha
         if (parameter != null) {
             this.eventIdForEdit = UUID.fromString(parameter);
             UUID userId = this.authenticationContext.getAuthenticatedUser(UserAdapter.class).get().getUser().id();
-            this.eventService
-                .getEventByOrganizer(userId, this.eventIdForEdit)
-                .ifPresentOrElse(event -> this.eventForm.setEvent(EventRequest.from(event)), () -> {
-                    throw new EventNotFoundException();
-                });
+            this.eventService.getEventByOrganizer(userId, this.eventIdForEdit).ifPresentOrElse(event -> {
+                ImageValue posterValue = event.posterUrl() != null ? this.imageService.getImage(event.posterUrl())
+                        : null;
+                ImageValue bannerValue = event.bannerUrl() != null ? this.imageService.getImage(event.bannerUrl())
+                        : null;
+
+                this.eventForm.setEvent(EventRequest.from(event, posterValue, bannerValue));
+            }, () -> {
+                throw new EventNotFoundException();
+            });
         }
     }
 
@@ -81,17 +98,36 @@ public class EventFormView extends VerticalLayout implements HasDynamicTitle, Ha
         UUID userId = this.authenticationContext.getAuthenticatedUser(UserAdapter.class).get().getUser().id();
 
         this.eventForm.getEvent().ifPresent(event -> {
+            EventResponse eventResponse;
             if (this.eventIdForEdit != null) {
-                this.eventService.updateEventByOrganizer(userId, this.eventIdForEdit, event.toUpdateDto());
+                eventResponse = this.eventService
+                    .updateEventByOrganizer(userId, this.eventIdForEdit, event.toUpdateDto());
                 successNotification.setText("Event updated successfully!");
             } else {
-                this.eventService.createEvent(userId, event.toCreateDto());
+                eventResponse = this.eventService.createEvent(userId, event.toCreateDto());
                 successNotification.setText("Event created successfully!");
             }
 
-            successNotification.open();
             EventsView.showEventsView();
+
+            this.uploadImage(userId, eventResponse.id(), "poster", event.posterValue());
+            this.uploadImage(userId, eventResponse.id(), "banner", event.bannerValue());
+
+            EventsView.showEventsView();
+            successNotification.open();
         });
+    }
+
+    private void uploadImage(UUID userId, UUID eventId, String imageType, ImageValue image) {
+        String key = null;
+        if (image != null && image.changed() && image.imageData() != null) {
+            UploadUrlResponse bannerUploadUrl = this.eventService
+                .generateUploadUrl(userId, eventId, new UploadUrlRequest(imageType, image.contentType()));
+            key = this.imageService.uploadImage(bannerUploadUrl.uploadUrl(), image);
+        }
+        if (image != null && image.changed()) {
+            this.eventService.confirmUpload(userId, eventId, new ConfirmUploadRequest(imageType, key));
+        }
     }
 
     public static RouterLink createEventFormLink(String label, UUID eventId) {

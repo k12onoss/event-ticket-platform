@@ -11,8 +11,12 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.ErrorEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 
+import app.k12onos.tickets.event.exceptions.DeleteFileFailedException;
+import app.k12onos.tickets.event.exceptions.GeneratePresignedUrlFailedException;
 import app.k12onos.tickets.event_management.exceptions.EventNotFoundException;
+import app.k12onos.tickets.event_management.exceptions.GetImageFailedException;
 import app.k12onos.tickets.event_management.exceptions.TicketTypeNotFoundException;
+import app.k12onos.tickets.event_management.exceptions.UploadImageFailedException;
 import app.k12onos.tickets.security.exceptions.UserNotFoundException;
 import app.k12onos.tickets.ticket.exceptions.QrCodeGenerationException;
 import app.k12onos.tickets.ticket.exceptions.QrCodeNotFoundException;
@@ -47,6 +51,9 @@ public class MainErrorHandler {
             case QrCodeNotFoundException _ -> "QR code not found";
             case QrCodeGenerationException _ -> "Cannot generate QR code";
             case TicketsSoldOutException _ -> "Tickets are sold out";
+            case GeneratePresignedUrlFailedException _,UploadImageFailedException _ -> "Image upload failed";
+            case GetImageFailedException _ -> "Image request failed";
+            case DeleteFileFailedException _ -> "Deleting image failed";
             default -> "An unexpected error has occurred. Please try again later.";
         };
 

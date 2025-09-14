@@ -3,8 +3,9 @@ package app.k12onos.tickets.published_event.ui.components;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.card.Card;
 import com.vaadin.flow.component.card.CardVariant;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.theme.lumo.LumoIcon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
@@ -17,8 +18,13 @@ public class EventCard extends Card {
         this.setMaxWidth(300F, Unit.PIXELS);
         this.addClassNames(Margin.NONE, Width.FULL);
         this.addThemeVariants(CardVariant.LUMO_STRETCH_MEDIA);
+        this.getStyle().set("--vaadin-card-media-aspect-ratio", "3 / 4");
 
-        this.setMedia(LumoIcon.PHOTO.create());
+        if (event.posterUrl() != null) {
+            this.setMedia(new Image(event.posterUrl(), "poster"));
+        } else {
+            this.setMedia(VaadinIcon.PICTURE.create());
+        }
         this.setTitle(event.name());
         this.setSubtitle(new Span(event.venue()));
         this.add(DateTimeUtil.formatDateTime(event.start(), event.end(), true));

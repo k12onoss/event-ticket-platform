@@ -14,9 +14,10 @@ public record EventSummaryResponse(
     String venue,
     LocalDateTime salesStart,
     LocalDateTime salesEnd,
-    EventStatus status) {
+    EventStatus status,
+    String posterUrl) {
 
-    public static EventSummaryResponse from(Event event) {
+    public static EventSummaryResponse from(Event event, String posterUrl) {
         return new EventSummaryResponse(
             event.getId(),
             event.getName(),
@@ -25,6 +26,7 @@ public record EventSummaryResponse(
             event.getVenue(),
             event.getSalesStart(),
             event.getSalesEnd(),
-            event.getStatus());
+            event.getStatus(),
+            posterUrl);
     }
 }

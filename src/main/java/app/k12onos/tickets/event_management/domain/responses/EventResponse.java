@@ -15,12 +15,14 @@ public record EventResponse(
     String venue,
     LocalDateTime salesStart,
     LocalDateTime salesEnd,
-    List<TicketTypeResponse> ticketTypes,
     EventStatus status,
+    String posterUrl,
+    String bannerUrl,
+    List<TicketTypeResponse> ticketTypes,
     LocalDateTime createdAt,
     LocalDateTime updatedAt) {
 
-    public static EventResponse from(Event event) {
+    public static EventResponse from(Event event, String posterUrl, String bannerUrl) {
         List<TicketTypeResponse> ticketTypeResponses = event
             .getTicketTypes()
             .stream()
@@ -35,8 +37,10 @@ public record EventResponse(
             event.getVenue(),
             event.getSalesStart(),
             event.getSalesEnd(),
-            ticketTypeResponses,
             event.getStatus(),
+            posterUrl,
+            bannerUrl,
+            ticketTypeResponses,
             event.getCreatedAt(),
             event.getUpdatedAt());
     }

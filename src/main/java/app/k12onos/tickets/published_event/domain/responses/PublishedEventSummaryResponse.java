@@ -10,15 +10,17 @@ public record PublishedEventSummaryResponse(
     String name,
     LocalDateTime start,
     LocalDateTime end,
-    String venue) {
+    String venue,
+    String posterUrl) {
 
-    public static PublishedEventSummaryResponse from(Event event) {
+    public static PublishedEventSummaryResponse from(Event event, String posterUrl) {
         return new PublishedEventSummaryResponse(
             event.getId(),
             event.getName(),
             event.getStart(),
             event.getEnd(),
-            event.getVenue());
+            event.getVenue(),
+            posterUrl);
     }
 
 }

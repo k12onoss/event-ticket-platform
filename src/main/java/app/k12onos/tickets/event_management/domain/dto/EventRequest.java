@@ -18,6 +18,8 @@ public record EventRequest(
     LocalDateTime salesStart,
     LocalDateTime salesEnd,
     EventStatus status,
+    ImageValue posterValue,
+    ImageValue bannerValue,
     List<TicketTypeRequest> ticketTypes) {
 
     public static final String PROP_NAME = "name";
@@ -27,9 +29,11 @@ public record EventRequest(
     public static final String PROP_SALES_START = "salesStart";
     public static final String PROP_SALES_END = "salesEnd";
     public static final String PROP_STATUS = "status";
+    public static final String PROP_POSTER_KEY = "posterValue";
+    public static final String PROP_BANNER_KEY = "bannerValue";
     public static final String PROP_TICKET_TYPES = "ticketTypes";
 
-    public static EventRequest from(EventResponse event) {
+    public static EventRequest from(EventResponse event, ImageValue posterValue, ImageValue bannerValue) {
         List<TicketTypeRequest> ticketTypes = event.ticketTypes().stream().map(TicketTypeRequest::from).toList();
         return new EventRequest(
             event.name(),
@@ -39,6 +43,8 @@ public record EventRequest(
             event.salesStart(),
             event.salesEnd(),
             event.status(),
+            posterValue,
+            bannerValue,
             ticketTypes);
     }
 

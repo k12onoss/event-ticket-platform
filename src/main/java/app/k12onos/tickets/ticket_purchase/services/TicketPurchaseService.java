@@ -14,7 +14,7 @@ import app.k12onos.tickets.ticket.domain.entities.Ticket;
 import app.k12onos.tickets.ticket.domain.enums.QrCodeStatus;
 import app.k12onos.tickets.ticket.domain.enums.TicketStatus;
 import app.k12onos.tickets.ticket.repositories.TicketRepository;
-import app.k12onos.tickets.ticket.utils.TokenUtil;
+import app.k12onos.tickets.ticket.services.TokenService;
 import app.k12onos.tickets.ticket_purchase.exceptions.TicketsSoldOutException;
 import app.k12onos.tickets.ticket_purchase.repositories.TicketTypeRepository;
 import jakarta.transaction.Transactional;
@@ -25,24 +25,29 @@ public class TicketPurchaseService {
     private final UserRepository userRepository;
     private final TicketTypeRepository ticketTypeRepository;
     private final TicketRepository ticketRepository;
+    private final TokenService tokenService;
 
-    public TicketPurchaseService(UserRepository userRepository, TicketTypeRepository ticketTypeRepository,
-			TicketRepository ticketRepository) {
-		this.userRepository = userRepository;
-		this.ticketTypeRepository = ticketTypeRepository;
-		this.ticketRepository = ticketRepository;
-	}
-    
+    public TicketPurchaseService(
+        UserRepository userRepository,
+        TicketTypeRepository ticketTypeRepository,
+        TicketRepository ticketRepository,
+        TokenService tokenService) {
+
+        this.userRepository = userRepository;
+        this.ticketTypeRepository = ticketTypeRepository;
+        this.ticketRepository = ticketRepository;
+        this.tokenService = tokenService;
+    }
+
     @Transactional
     public Ticket purchaseTicket(UUID attendeeId, UUID ticketTypeId) {
         User attendee = this.userRepository
-                .findById(attendeeId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + attendeeId + " not found"));
+            .findById(attendeeId)
+            .orElseThrow(() -> new UserNotFoundException("User with id " + attendeeId + " not found"));
 
         TicketType ticketType = this.ticketTypeRepository
-                .findByIdWithLock(ticketTypeId)
-                .orElseThrow(
-                        () -> new TicketTypeNotFoundException("Ticket type with id " + ticketTypeId + " not found"));
+            .findByIdWithLock(ticketTypeId)
+            .orElseThrow(() -> new TicketTypeNotFoundException("Ticket type with id " + ticketTypeId + " not found"));
 
         int purchasedTicketsCount = this.ticketRepository.findCount(ticketTypeId);
 
@@ -57,7 +62,7 @@ public class TicketPurchaseService {
 
         QrCode qrCode = new QrCode();
         qrCode.setStatus(QrCodeStatus.ACTIVE);
-        qrCode.setToken(TokenUtil.generateBase62Token());
+        qrCode.setToken(this.tokenService.generateBase62Token());
         qrCode.setTicket(ticket);
 
         ticket.getQrCodes().add(qrCode);

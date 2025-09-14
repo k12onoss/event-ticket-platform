@@ -60,6 +60,12 @@ public class Event {
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private EventStatus status;
 
+    @Column(name = "poster_key")
+    private String posterKey;
+
+    @Column(name = "banner_key")
+    private String bannerKey;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id")
     private User organizer;
@@ -181,6 +187,22 @@ public class Event {
         this.status = status;
     }
 
+    public String getPosterKey() {
+        return this.posterKey;
+    }
+
+    public void setPosterKey(String posterKey) {
+        this.posterKey = posterKey;
+    }
+
+    public String getBannerKey() {
+        return this.bannerKey;
+    }
+
+    public void setBannerKey(String bannerKey) {
+        this.bannerKey = bannerKey;
+    }
+
     public User getOrganizer() {
         return this.organizer;
     }
@@ -241,6 +263,8 @@ public class Event {
         result = prime * result + ((this.salesStart == null) ? 0 : this.salesStart.hashCode());
         result = prime * result + ((this.salesEnd == null) ? 0 : this.salesEnd.hashCode());
         result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
+        result = prime * result + ((this.posterKey == null) ? 0 : this.posterKey.hashCode());
+        result = prime * result + ((this.bannerKey == null) ? 0 : this.bannerKey.hashCode());
         result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
         result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
         return result;
@@ -291,6 +315,16 @@ public class Event {
         } else if (!this.salesEnd.equals(other.salesEnd))
             return false;
         if (this.status != other.status)
+            return false;
+        if (this.posterKey == null) {
+            if (other.posterKey != null)
+                return false;
+        } else if (!this.posterKey.equals(other.posterKey))
+            return false;
+        if (this.bannerKey == null) {
+            if (other.bannerKey != null)
+                return false;
+        } else if (!this.bannerKey.equals(other.bannerKey))
             return false;
         if (this.createdAt == null) {
             if (other.createdAt != null)

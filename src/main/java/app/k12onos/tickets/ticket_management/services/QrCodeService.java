@@ -7,20 +7,26 @@ import org.springframework.stereotype.Service;
 import app.k12onos.tickets.ticket.domain.entities.QrCode;
 import app.k12onos.tickets.ticket.exceptions.QrCodeNotFoundException;
 import app.k12onos.tickets.ticket.repositories.QrCodeRepository;
+import app.k12onos.tickets.ticket.services.TokenService;
+import app.k12onos.tickets.ticket_management.domain.responses.QrCodeResponse;
 
 @Service
 public class QrCodeService {
 
     private final QrCodeRepository qrCodeRepository;
+    private final TokenService tokenService;
 
-    public QrCodeService(QrCodeRepository qrCodeRepository) {
+    public QrCodeService(QrCodeRepository qrCodeRepository, TokenService tokenService) {
         this.qrCodeRepository = qrCodeRepository;
+        this.tokenService = tokenService;
     }
 
-    public QrCode getActiveQrCodeForTicketAndPurchaser(UUID ticketId, UUID purchaserId) {
-        return this.qrCodeRepository
+    public QrCodeResponse getActiveQrCodeForTicketAndPurchaser(UUID ticketId, UUID purchaserId) {
+        QrCode qrCode = this.qrCodeRepository
             .findActiveQrCodeForTicketAndPurchaser(ticketId, purchaserId)
             .orElseThrow(QrCodeNotFoundException::new);
+
+        return new QrCodeResponse(qrCode.getToken(), this.tokenService.signToken(qrCode.getToken()));
     }
 
 }

@@ -1,3 +1,16 @@
 spring:
     flyway:
         enabled: false
+
+tickets:
+    hmac-secret: ""
+
+s3:
+    endpoint: ""
+    region: ""
+    access-key-id: ""
+    secret-access-key: ""
+    service-role-key: ""
+    public-base-url: ""
+    bucket:
+        event-assets: ""

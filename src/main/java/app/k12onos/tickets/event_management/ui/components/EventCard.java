@@ -10,6 +10,7 @@ import com.vaadin.flow.component.card.Card;
 import com.vaadin.flow.component.card.CardVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -41,9 +42,14 @@ public class EventCard extends Card {
         this.setWidthFull();
         this.addThemeVariants(CardVariant.LUMO_HORIZONTAL, CardVariant.LUMO_STRETCH_MEDIA);
 
-        Icon media = VaadinIcon.PICTURE.create();
-        media.addClassNames(Background.CONTRAST_20, Padding.Horizontal.XLARGE);
-        this.setMedia(media);
+        if (event.posterUrl() == null) {
+            Icon media = VaadinIcon.PICTURE.create();
+            media.addClassNames(Background.CONTRAST_20, Padding.Horizontal.XLARGE);
+            this.setMedia(media);
+        } else {
+            Image poster = new Image(event.posterUrl(), "poster");
+            this.setMedia(poster);
+        }
 
         HorizontalLayout titleLayout = this.createTitleLayout(event.name(), event.status());
 

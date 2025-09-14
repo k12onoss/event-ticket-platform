@@ -37,6 +37,10 @@ public class EventForm extends FormLayout {
         ComboBox<EventStatus> status = new ComboBox<>("Status", EventStatus.values());
         status.setRequired(true);
 
+        ImageUploadField poster = new ImageUploadField("poster");
+
+        ImageUploadField banner = new ImageUploadField("banner");
+
         TicketTypeField ticketTypes = new TicketTypeField();
 
         this.setAutoResponsive(true);
@@ -48,6 +52,7 @@ public class EventForm extends FormLayout {
         this.addFormRow(start, end);
         this.addFormRow(salesStart, salesEnd);
         this.addFormRow(status);
+        this.addFormRow(poster, banner);
         this.add(ticketTypes, 2);
 
         this.eventBinder = new Binder<>(EventRequest.class);
@@ -58,6 +63,8 @@ public class EventForm extends FormLayout {
         this.eventBinder.forField(salesStart).bind(EventRequest.PROP_SALES_START);
         this.eventBinder.forField(salesEnd).bind(EventRequest.PROP_SALES_END);
         this.eventBinder.forField(status).asRequired("Status is required").bind(EventRequest.PROP_STATUS);
+        this.eventBinder.forField(poster).bind(EventRequest.PROP_POSTER_KEY);
+        this.eventBinder.forField(banner).bind(EventRequest.PROP_BANNER_KEY);
         this.eventBinder
             .forField(ticketTypes)
             .withValidator(types -> types != null && types.size() > 0, "At least one ticket type is required")
