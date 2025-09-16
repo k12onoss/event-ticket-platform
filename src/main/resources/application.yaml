@@ -14,35 +14,42 @@ spring:
         name: tickets
     
     datasource:
-        url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres?user=postgres&password=changemeinprod!}
+        url: ${DB_URL}
+    
+    jpa:
+        properties:
+            hibernate:
+                default_schema: app
+
+    flyway:
+        default-schema: app
+        schemas:
+            - app
     
     security:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: ${KC_ISSUER_URL:http://localhost:9090/realms/event-ticket-platform}
+                    issuer-uri: ${KC_ISSUER_URL}
             
             client:
                 registration:
                     keycloak:
                         provider: keycloak
-                        client-id: ${KC_CLIENT_ID:event-ticket-platform-app}
+                        client-id: ${KC_CLIENT_ID}
+                        client-secret: ${KC_CLIENT_SECRET}
                         authorization-grant-type: authorization_code
                         redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
                         scope: openid,profile
                 
                 provider:
                     keycloak:
-                        issuer-uri: ${KC_ISSUER_URL:http://localhost:9090/realms/event-ticket-platform}
+                        issuer-uri: ${KC_ISSUER_URL}
 
 tickets:
     hmac-secret: ${HMAC_SECRET}
 
 s3:
-    endpoint: ${S3_ENDPOINT_URL}
-    region: ${S3_REGION}
-    access-key-id: ${S3_ACCESS_KEY_ID}
-    secret-access-key: ${S3_SECRET_ACCESS_KEY}
     service-role-key: ${S3_SERVICE_ROLE_KEY}
     public-base-url: ${S3_PUBLIC_BASE_URL}
     bucket:
