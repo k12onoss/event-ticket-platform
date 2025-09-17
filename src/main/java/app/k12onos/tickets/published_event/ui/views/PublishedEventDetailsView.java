@@ -19,6 +19,7 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility.BorderRadius;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.Flex;
@@ -27,6 +28,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 import app.k12onos.tickets.base.utils.DateTimeUtil;
+import app.k12onos.tickets.base.utils.InMemoryUtil;
 import app.k12onos.tickets.event_management.exceptions.EventNotFoundException;
 import app.k12onos.tickets.published_event.domain.responses.PublishedEventResponse;
 import app.k12onos.tickets.published_event.services.PublishedEventService;
@@ -37,6 +39,8 @@ import app.k12onos.tickets.published_event.ui.components.TicketTypeCard;
 public class PublishedEventDetailsView extends HorizontalLayout implements HasUrlParameter<String>, HasDynamicTitle {
 
     private String title;
+
+    private final transient AuthenticationContext authenticationContext;
     private final PublishedEventService publishedEventService;
 
     private final Card image;
@@ -45,8 +49,13 @@ public class PublishedEventDetailsView extends HorizontalLayout implements HasUr
     private final HorizontalLayout eventVenue;
     private final VerticalLayout ticketTypeCards;
 
-    PublishedEventDetailsView(PublishedEventService publishedEventsService) {
+    PublishedEventDetailsView(
+        AuthenticationContext authenticationContext,
+        PublishedEventService publishedEventsService) {
+
         this.title = "Event Details";
+
+        this.authenticationContext = authenticationContext;
         this.publishedEventService = publishedEventsService;
 
         this.setPadding(true);
@@ -94,7 +103,8 @@ public class PublishedEventDetailsView extends HorizontalLayout implements HasUr
         this.eventVenue.add(new Span(event.venue()));
 
         event.ticketTypes().forEach(ticketType -> {
-            TicketTypeCard ticketTypeCard = new TicketTypeCard(ticketType);
+            InMemoryUtil.ticketTypesMap.putIfAbsent(ticketType.id(), ticketType);
+            TicketTypeCard ticketTypeCard = new TicketTypeCard(event.id(), this.authenticationContext, ticketType);
             this.ticketTypeCards.add(ticketTypeCard);
         });
     }
