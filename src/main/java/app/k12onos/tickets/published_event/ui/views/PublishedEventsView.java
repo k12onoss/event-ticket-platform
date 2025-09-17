@@ -11,6 +11,7 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Flex;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
@@ -45,7 +46,7 @@ public class PublishedEventsView extends VerticalLayout implements AfterNavigati
         this.paginationControls.setPageChangedListner(pageable -> this.updateEvents(searchField.getValue(), pageable));
         this.paginationControls.addToMiddle(searchField);
 
-        this.eventsLayout = new HorizontalLayout(JustifyContentMode.CENTER);
+        this.eventsLayout = new HorizontalLayout();
         this.eventsLayout.setWrap(true);
         this.eventsLayout.setPadding(false);
         this.eventsLayout.setMargin(false);
@@ -72,7 +73,10 @@ public class PublishedEventsView extends VerticalLayout implements AfterNavigati
         this.eventsLayout.removeAll();
         publishedEvents.getContent().forEach(publishedEvent -> {
             EventCard card = new EventCard(publishedEvent);
-            this.eventsLayout.add(card);
+            RouterLink link = PublishedEventDetailsView.createPublishedEventLink(card, publishedEvent.id());
+            link.getStyle().setMaxWidth("300px");
+            link.getStyle().setWidth("100%");
+            this.eventsLayout.add(link);
         });
     }
 

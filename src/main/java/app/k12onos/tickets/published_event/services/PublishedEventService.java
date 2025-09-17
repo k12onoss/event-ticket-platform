@@ -41,7 +41,7 @@ public class PublishedEventService {
     }
 
     public Optional<PublishedEventResponse> getPublishedEvent(UUID id) {
-        Optional<Event> publishedEvent = this.eventRepository.findPublishedEvent(id);
+        Optional<Event> publishedEvent = this.eventRepository.findEventByStatus(id, EventStatus.PUBLISHED);
 
         return publishedEvent
             .map(e -> PublishedEventResponse.from(e, this.s3Service.generateReadUrl(e.getBannerKey())));

@@ -21,6 +21,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.FontWeight;
 import com.vaadin.flow.theme.lumo.LumoUtility.IconSize;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
+import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 import app.k12onos.tickets.event_management.ui.views.EventsView;
@@ -41,7 +42,7 @@ public class MainLayout extends AppLayout {
         this.setPrimarySection(Section.NAVBAR);
 
         HorizontalLayout navbarLayout = new HorizontalLayout(Alignment.CENTER);
-        navbarLayout.addClassNames(Flex.GROW, MaxWidth.SCREEN_XLARGE, Margin.AUTO);
+        navbarLayout.addClassNames(Flex.GROW, MaxWidth.SCREEN_XLARGE, Margin.AUTO, Padding.Horizontal.MEDIUM);
 
         navbarLayout.addToStart(this.createHeader());
         authenticationContext
@@ -61,7 +62,6 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(FontWeight.SEMIBOLD, FontSize.LARGE);
 
         HorizontalLayout header = new HorizontalLayout(appIcon, appName);
-        header.setPadding(true);
         header.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
         return header;

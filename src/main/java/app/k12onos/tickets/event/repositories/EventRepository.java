@@ -24,10 +24,10 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     Page<Event> findByStatus(EventStatus status, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM events WHERE status = 'PUBLISHED'::event_status AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)", countQuery = "SELECT COUNT(*) FROM events WHERE status = 'PUBLISHED'::event_status AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)")
+    @Query(nativeQuery = true, value = "SELECT * FROM app.events WHERE status = 'PUBLISHED'::app.event_status AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)", countQuery = "SELECT COUNT(*) FROM app.events WHERE status = 'PUBLISHED'::app.event_status AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm)")
     Page<Event> searchPublishedEvents(@Param("searchTerm") String searchTerm, Pageable pageable);
 
-    @Query("SELECT E FROM Event E JOIN FETCH E.ticketTypes WHERE E.id = ?1 AND E.status = EventStatus.PUBLISHED")
-    Optional<Event> findPublishedEvent(UUID id);
+    @Query("SELECT E FROM Event E JOIN FETCH E.ticketTypes WHERE E.id = ?1 AND E.status = ?2")
+    Optional<Event> findEventByStatus(UUID id, EventStatus status);
 
 }
