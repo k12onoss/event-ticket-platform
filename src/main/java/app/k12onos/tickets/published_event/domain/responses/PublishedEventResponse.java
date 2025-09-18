@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import app.k12onos.tickets.event.domain.entities.Event;
+import app.k12onos.tickets.event.domain.responses.TicketTypeSummaryResponse;
 
 public record PublishedEventResponse(
     UUID id,

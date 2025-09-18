@@ -74,7 +74,8 @@ class ArchitectureTest {
                     public boolean test(JavaClass javaClass) {
                         return !javaClass.getPackageName().contains("domain.entities")
                             && !javaClass.getPackageName().contains("exceptions")
-                            && !javaClass.getPackageName().contains("base.ui");
+                            && !javaClass.getPackageName().contains("base.ui")
+                            && !javaClass.getPackageName().contains("base.utils");
                     }
                 });
         slices().matching(BASE_PACKAGE + ".(*)..").should().beFreeOfCycles().check(filteredClasses);

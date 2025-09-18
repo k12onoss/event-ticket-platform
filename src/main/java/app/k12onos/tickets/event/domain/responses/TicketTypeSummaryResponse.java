@@ -1,4 +1,4 @@
-package app.k12onos.tickets.published_event.domain.responses;
+package app.k12onos.tickets.event.domain.responses;
 
 import java.util.UUID;
 

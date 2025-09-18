@@ -11,7 +11,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Background;
 import com.vaadin.flow.theme.lumo.LumoUtility.BorderRadius;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
-import app.k12onos.tickets.published_event.domain.responses.TicketTypeSummaryResponse;
+import app.k12onos.tickets.event.domain.responses.TicketTypeSummaryResponse;
 import app.k12onos.tickets.security.domain.UserRoles;
 import app.k12onos.tickets.security.ui.views.SignInView;
 import app.k12onos.tickets.ticket_purchase.ui.views.TicketPurchaseView;

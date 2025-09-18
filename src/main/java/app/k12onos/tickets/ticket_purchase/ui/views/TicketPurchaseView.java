@@ -24,8 +24,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 
 import app.k12onos.tickets.base.utils.InMemoryUtil;
-import app.k12onos.tickets.published_event.domain.responses.TicketTypeSummaryResponse;
-import app.k12onos.tickets.published_event.ui.views.PublishedEventDetailsView;
+import app.k12onos.tickets.event.domain.responses.TicketTypeSummaryResponse;
 import app.k12onos.tickets.security.domain.UserAdapter;
 import app.k12onos.tickets.security.domain.UserRoles;
 import app.k12onos.tickets.ticket_purchase.services.TicketPurchaseService;
@@ -81,7 +80,7 @@ public class TicketPurchaseView extends VerticalLayout implements BeforeEnterObs
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         UUID userId = this.authenticationContext.getAuthenticatedUser(UserAdapter.class).get().getUser().id();
-        UUID eventId = UUID.fromString(event.getRouteParameters().get(PARAM_EVENT_ID).get());
+        UUID _ = UUID.fromString(event.getRouteParameters().get(PARAM_EVENT_ID).get());
         UUID ticketTypeId = UUID.fromString(event.getRouteParameters().get(PARAM_TICKET_TYPE_ID).get());
         TicketTypeSummaryResponse ticketType = InMemoryUtil.ticketTypesMap.get(ticketTypeId);
 
@@ -97,7 +96,6 @@ public class TicketPurchaseView extends VerticalLayout implements BeforeEnterObs
         this.purchaseButton.addClickListener(_ -> {
             this.ticketPurchaseService.purchaseTicket(userId, ticketTypeId);
             notification.open();
-            PublishedEventDetailsView.showPublishedEventView(eventId);
         });
     }
 

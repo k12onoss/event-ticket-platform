@@ -3,7 +3,7 @@ package app.k12onos.tickets.ticket_management.domain.responses;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import app.k12onos.tickets.ticket.domain.entities.Ticket;
+import app.k12onos.tickets.ticket.domain.dtos.TicketDto;
 import app.k12onos.tickets.ticket.domain.enums.TicketStatus;
 
 public record TicketResponse(
@@ -15,19 +15,20 @@ public record TicketResponse(
     String eventName,
     LocalDateTime eventStart,
     LocalDateTime eventEnd,
-    String eventVenue) {
+    String eventVenue,
+    String eventPosterUrl) {
 
-    public static TicketResponse from(Ticket ticket) {
+    public static TicketResponse from(TicketDto ticketDto, String posterUrl) {
         return new TicketResponse(
-            ticket.getId(),
-            ticket.getStatus(),
-            ticket.getTicketType().getName(),
-            ticket.getTicketType().getDescription(),
-            ticket.getTicketType().getPrice(),
-            ticket.getTicketType().getEvent().getName(),
-            ticket.getTicketType().getEvent().getStart(),
-            ticket.getTicketType().getEvent().getEnd(),
-            ticket.getTicketType().getEvent().getVenue());
+            ticketDto.id(),
+            ticketDto.status(),
+            ticketDto.ticketTypeName(),
+            ticketDto.description(),
+            ticketDto.price(),
+            ticketDto.eventName(),
+            ticketDto.eventStart(),
+            ticketDto.eventEnd(),
+            ticketDto.eventVenue(),
+            posterUrl);
     }
-
 }

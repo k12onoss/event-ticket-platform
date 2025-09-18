@@ -2,7 +2,6 @@ package app.k12onos.tickets.ticket_management.controllers;
 
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -30,14 +29,9 @@ public class TicketController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     PagedModel<TicketResponse> getTickets(@AuthenticationPrincipal Jwt jwt, Pageable pageable) {
-
         UUID userId = SecurityUtil.parseUserId(jwt);
 
-        Page<TicketResponse> tickets = this.ticketService
-            .getTicketsForPurchaser(userId, pageable)
-            .map(TicketResponse::from);
-
-        return new PagedModel<>(tickets);
+        return this.ticketService.getTicketsForPurchaser(userId, pageable);
     }
 
 }

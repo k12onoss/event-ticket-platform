@@ -29,6 +29,7 @@ import app.k12onos.tickets.security.domain.UserAdapter;
 import app.k12onos.tickets.security.domain.UserRoles;
 import app.k12onos.tickets.security.domain.dto.UserDto;
 import app.k12onos.tickets.security.ui.views.SignInView;
+import app.k12onos.tickets.ticket_management.ui.views.TicketsView;
 
 @Layout
 @AnonymousAllowed
@@ -86,6 +87,8 @@ public class MainLayout extends AppLayout {
 
         if (this.authenticationContext.hasRole(UserRoles.ORGANIZER)) {
             userMenuItem.getSubMenu().addItem(EventsView.createEventsViewLink());
+        } else if (this.authenticationContext.hasRole(UserRoles.ATTENDEE)) {
+            userMenuItem.getSubMenu().addItem(TicketsView.createTicketsViewLink());
         }
 
         userMenuItem.getSubMenu().addItem("Logout", _ -> this.authenticationContext.logout());

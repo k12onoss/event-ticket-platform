@@ -91,8 +91,8 @@ public class PaginationControls extends HorizontalLayout {
     }
 
     public void setValue(PageMetadata pageMetadata) {
-        this.currentPage = (int) pageMetadata.number() + 1;
         this.totalPageCount = (int) pageMetadata.totalPages();
+        this.currentPage = this.totalPageCount == 0 ? 0 : (int) pageMetadata.number() + 1;
 
         this.pageSizeSelect.setValue((int) pageMetadata.size());
         this.currentPageLabel.setText(String.format("%d of %d", this.currentPage, this.totalPageCount));
